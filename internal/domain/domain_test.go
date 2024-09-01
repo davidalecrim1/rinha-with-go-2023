@@ -119,14 +119,14 @@ func TestPerson_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "Invalid stack",
+			name: "Valid empty stack",
 			fields: fields{
 				nickname: "johndoe",
 				name:     "John Doe",
 				dob:      "1990-01-01",
 				stack:    []string{},
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name: "Invalid stack item",

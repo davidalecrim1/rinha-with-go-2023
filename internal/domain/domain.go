@@ -93,10 +93,6 @@ func (p *Person) validateDate() error {
 }
 
 func (p *Person) validateStack() error {
-	if len(p.Stack) == 0 {
-		return ErrInvalidStack
-	}
-
 	for _, stack := range p.Stack {
 		if stack == "" {
 			return ErrInvalidStack

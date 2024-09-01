@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// TODO: This has multiple reasons to change, fix it
 func InitializeRouter() error {
 	port := os.Getenv("PORT")
 
