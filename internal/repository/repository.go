@@ -39,3 +39,51 @@ func (repo *PersonPostgreSqlRepository) GetPersonByNickname(nickname string) (*d
 
 	return &person, nil
 }
+
+func (repo *PersonPostgreSqlRepository) GetPersonById(id string) (*domain.Person, error) {
+	query := "SELECT id, nickname, name, dob, stack FROM persons WHERE id = $1"
+	row := repo.db.QueryRow(query, id)
+
+	var person domain.Person
+	err := row.Scan(&person.ID, &person.Nickname, &person.Name, &person.Dob, pq.Array(&person.Stack))
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, domain.ErrPersonNotFound
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &person, nil
+}
+
+func (repo *PersonPostgreSqlRepository) SearchPersons(term string) ([]domain.Person, error) {
+	query := `
+	SELECT id, nickname, name, dob, stack 
+	FROM persons, unnest(stack) as s
+	WHERE nickname ILIKE $1
+	OR name ILIKE $1
+	OR s ILIKE $1
+	LIMIT 50;`
+
+	rows, err := repo.db.Query(query, "%"+term+"%")
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var persons []domain.Person = make([]domain.Person, 0)
+	for rows.Next() {
+		var person domain.Person
+		err := rows.Scan(&person.ID, &person.Nickname, &person.Name, &person.Dob, pq.Array(&person.Stack))
+		if err != nil {
+			return nil, err
+		}
+		persons = append(persons, person)
+	}
+
+	return persons, nil
+}

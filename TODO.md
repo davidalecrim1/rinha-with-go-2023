@@ -1,1 +1,1 @@
-- validate that someone was already created using nickname
+- test create a new column with all the data or maybe another table for search the term (instead of using three ilike)

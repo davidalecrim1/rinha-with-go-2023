@@ -13,14 +13,15 @@ var (
 	ErrInvalidStack        = errors.New("invalid stack")
 	ErrNicknameNotFound    = errors.New("nickname not found")
 	ErrPersonAlreadyExists = errors.New("person already exists")
+	ErrPersonNotFound      = errors.New("person not found")
 )
 
 type Person struct {
-	ID       string
-	Nickname string
-	Name     string
-	Dob      string
-	Stack    []string
+	ID       string   `json:"id"`
+	Nickname string   `json:"apelido"`
+	Name     string   `json:"nome"`
+	Dob      string   `json:"nascimento"`
+	Stack    []string `json:"stack"`
 }
 
 func NewPerson(nickname string, name string, dob string, stack []string) (*Person, error) {
@@ -111,6 +112,8 @@ func (p *Person) validateStack() error {
 type PersonRepository interface {
 	CreatePerson(person *Person) error
 	GetPersonByNickname(nickname string) (*Person, error)
+	GetPersonById(id string) (*Person, error)
+	SearchPersons(term string) ([]Person, error)
 }
 
 type PersonService struct {
@@ -129,4 +132,12 @@ func (svc *PersonService) CreatePerson(p *Person) error {
 	}
 
 	return ErrPersonAlreadyExists
+}
+
+func (svc *PersonService) GetPersonById(id string) (*Person, error) {
+	return svc.repo.GetPersonById(id)
+}
+
+func (svc *PersonService) SearchPersons(term string) ([]Person, error) {
+	return svc.repo.SearchPersons(term)
 }

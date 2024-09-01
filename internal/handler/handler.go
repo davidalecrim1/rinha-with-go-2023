@@ -27,6 +27,7 @@ type CreatePersonRequest struct {
 	Stack    []string `json:"stack"`
 }
 
+// POST /pessoas
 func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 	var request CreatePersonRequest
 	var err error
@@ -67,4 +68,69 @@ func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 	h.logger.Debug("successful request")
 	w.Header().Set("Location", "/pessoas/"+person.ID)
 	w.WriteHeader(http.StatusCreated)
+}
+
+// GET /pessoas/[:id]
+func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
+	idString := r.PathValue("id")
+
+	if idString == "" {
+		h.logger.Debug("id is required")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	person, err := h.svc.GetPersonById(idString)
+
+	if errors.Is(err, domain.ErrPersonNotFound) {
+		h.logger.Debug("person not found", "error", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	if err != nil {
+		h.logger.Debug("error getting person", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(person); err != nil {
+		h.logger.Debug("error encoding response", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
+	term := r.URL.Query().Get("t")
+
+	if term == "" {
+		h.logger.Debug("term is required")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	h.logger.Debug("searching persons", "term", term)
+
+	persons, err := h.svc.SearchPersons(term)
+
+	if err != nil {
+		h.logger.Debug("error searching persons", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if len(persons) == 0 {
+		h.logger.Debug("no persons found")
+	}
+
+	if err = json.NewEncoder(w).Encode(persons); err != nil {
+		h.logger.Debug("error encoding response", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

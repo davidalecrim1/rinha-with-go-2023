@@ -49,3 +49,20 @@ POST http://localhost:8080/pessoas
     "stack" : null
 }
 // Expected: 400
+
+GET http://localhost:8080/pessoas/f7379ae8-8f9b-4cd5-8221-51efe19e721b
+// Expected: 404
+
+GET http://localhost:8080/pessoas/848fd60b-46be-40c8-8280-d4a0f334a87c
+// Expected: 200
+// Need to know the UUID in the database or have been inserted
+
+GET http://localhost:8080/pessoas?t=python
+// Expected: 200
+
+GET http://localhost:8080/pessoas?t=none
+// Expected: 200
+// Body: []
+
+GET http://localhost:8080/pessoas?t=
+// Expected: 400

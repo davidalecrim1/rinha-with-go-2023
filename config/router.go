@@ -26,6 +26,8 @@ func InitializeRouter() error {
 
 	router := http.NewServeMux()
 	router.HandleFunc("POST /pessoas", handler.CreatePerson)
+	router.HandleFunc("GET /pessoas/{id}", handler.GetPersonById)
+	router.HandleFunc("GET /pessoas", handler.SearchPersons)
 
 	return http.ListenAndServe(":"+port, router)
 }
