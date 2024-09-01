@@ -1,0 +1,1 @@
+- validate that someone was already created using nickname

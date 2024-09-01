@@ -7,10 +7,12 @@ import (
 )
 
 var (
-	ErrInvalidName     = errors.New("invalid name")
-	ErrInvalidNickname = errors.New("invalid nickname")
-	ErrInvalidDate     = errors.New("invalid date")
-	ErrInvalidStack    = errors.New("invalid stack")
+	ErrInvalidName         = errors.New("invalid name")
+	ErrInvalidNickname     = errors.New("invalid nickname")
+	ErrInvalidDate         = errors.New("invalid date")
+	ErrInvalidStack        = errors.New("invalid stack")
+	ErrNicknameNotFound    = errors.New("nickname not found")
+	ErrPersonAlreadyExists = errors.New("person already exists")
 )
 
 type Person struct {
@@ -108,6 +110,7 @@ func (p *Person) validateStack() error {
 
 type PersonRepository interface {
 	CreatePerson(person *Person) error
+	GetPersonByNickname(nickname string) (*Person, error)
 }
 
 type PersonService struct {
@@ -119,5 +122,11 @@ func NewPersonService(repo PersonRepository) *PersonService {
 }
 
 func (svc *PersonService) CreatePerson(p *Person) error {
-	return svc.repo.CreatePerson(p)
+	_, err := svc.repo.GetPersonByNickname(p.Nickname)
+
+	if errors.Is(err, ErrNicknameNotFound) {
+		return svc.repo.CreatePerson(p)
+	}
+
+	return ErrPersonAlreadyExists
 }

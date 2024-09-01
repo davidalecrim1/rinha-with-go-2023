@@ -7,6 +7,7 @@ POST http://localhost:8080/pessoas
     "nascimento" : "1985-09-23",
     "stack" : ["Python"]
 }
+// Expected: 200
 
 POST http://localhost:8080/pessoas
 
@@ -16,6 +17,7 @@ POST http://localhost:8080/pessoas
     "nascimento" : "1985-09-23",
     "stack" : ["Python", "Node"]
 }
+// Expected: 200
 
 POST http://localhost:8080/pessoas
 
@@ -25,3 +27,25 @@ POST http://localhost:8080/pessoas
     "nascimento" : "1985-09-23",
     "stack" : null
 }
+// Expected: 200
+
+POST http://localhost:8080/pessoas
+
+{
+    "apelido" : "ana",
+    "nome" : null, // não pode ser null
+    "nascimento" : "1985-09-23",
+    "stack" : null
+}
+// Expected: 422
+
+
+POST http://localhost:8080/pessoas
+
+{
+    "apelido" : "apelido",
+    "nome" : 1, // nome deve ser string e não número
+    "nascimento" : "1985-01-01",
+    "stack" : null
+}
+// Expected: 400

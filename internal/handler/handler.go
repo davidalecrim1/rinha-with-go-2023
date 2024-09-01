@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"go-rinha-de-backend-2023/internal/domain"
 	"log/slog"
 	"net/http"
@@ -32,7 +33,7 @@ func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 
 	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
 		h.logger.Debug("error decoding request body", "error", err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -50,6 +51,12 @@ func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = h.svc.CreatePerson(person)
+
+	if errors.Is(err, domain.ErrPersonAlreadyExists) {
+		h.logger.Debug("this person already exists", "error", err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
+	}
 
 	if err != nil {
 		h.logger.Debug("error creating person", "error", err)

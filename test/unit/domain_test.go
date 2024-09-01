@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"go-rinha-de-backend-2023/internal/domain"
 	"testing"
 )
 
@@ -31,7 +32,7 @@ func TestPerson_NewPerson(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			person, err := NewPerson(tt.fields.nickname, tt.fields.name, tt.fields.dob, tt.fields.stack)
+			person, err := domain.NewPerson(tt.fields.nickname, tt.fields.name, tt.fields.dob, tt.fields.stack)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewPerson() error = %v, wantErr %v", err, tt.wantErr)
@@ -141,7 +142,7 @@ func TestPerson_Validate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Person{
+			p := &domain.Person{
 				Nickname: tt.fields.nickname,
 				Name:     tt.fields.name,
 				Dob:      tt.fields.dob,
