@@ -66,3 +66,6 @@ GET http://localhost:8080/pessoas?t=none
 
 GET http://localhost:8080/pessoas?t=
 // Expected: 400
+
+GET http://localhost:8080/contagem-pessoas
+// Expected: 200

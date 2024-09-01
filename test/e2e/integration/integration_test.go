@@ -168,6 +168,32 @@ func TestPersonHandler_SeachPersons(t *testing.T) {
 	})
 }
 
+func TestPersonHandler_GetPersonsCount(t *testing.T) {
+	t.Run("get persons count", func(t *testing.T) {
+		logger := mock.NewLogger()
+
+		repo := mock.NewMockRepository()
+		svc := domain.NewPersonService(repo)
+		h := handler.NewPersonHandler(logger, svc)
+
+		err := repo.CreatePerson(&domain.Person{
+			ID:       "5ce4668c-4710-4cfb-ae5f-38988d6d49cb",
+			Nickname: "johndoe",
+			Name:     "John Doe",
+			Dob:      "1990-01-01",
+			Stack:    []string{"Go", "Docker"},
+		})
+		require.NoError(t, err)
+
+		req := httptest.NewRequest("GET", "/contagem-pessoas", nil)
+		rr := httptest.NewRecorder()
+
+		h.GetPersonsCount(rr, req)
+		assert.Equal(t, http.StatusOK, rr.Code)
+		assert.Contains(t, rr.Body.String(), "1")
+	})
+}
+
 func InitializeHandler() *handler.PersonHandler {
 	logger := mock.NewLogger()
 

@@ -54,3 +54,7 @@ func (m *MockRepository) SearchPersons(term string) ([]domain.Person, error) {
 	}
 	return persons, nil
 }
+
+func (m *MockRepository) GetPersonsCount() (int, error) {
+	return len(m.persons), nil
+}

@@ -28,6 +28,7 @@ func InitializeRouter() error {
 	router.HandleFunc("POST /pessoas", handler.CreatePerson)
 	router.HandleFunc("GET /pessoas/{id}", handler.GetPersonById)
 	router.HandleFunc("GET /pessoas", handler.SearchPersons)
+	router.HandleFunc("GET /contagem-pessoas", handler.GetPersonsCount)
 
 	return http.ListenAndServe(":"+port, router)
 }

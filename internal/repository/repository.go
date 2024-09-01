@@ -87,3 +87,10 @@ func (repo *PersonPostgreSqlRepository) SearchPersons(term string) ([]domain.Per
 
 	return persons, nil
 }
+
+func (repo *PersonPostgreSqlRepository) GetPersonsCount() (int, error) {
+	query := "SELECT COUNT(*) FROM persons"
+	var count int
+	err := repo.db.QueryRow(query).Scan(&count)
+	return count, err
+}

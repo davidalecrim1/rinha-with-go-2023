@@ -6,6 +6,7 @@ import (
 	"go-rinha-de-backend-2023/internal/domain"
 	"log/slog"
 	"net/http"
+	"strconv"
 )
 
 type PersonHandler struct {
@@ -133,4 +134,17 @@ func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+// GET /contagem-pessoas
+func (h *PersonHandler) GetPersonsCount(w http.ResponseWriter, r *http.Request) {
+	count, err := h.svc.GetPersonsCount()
+
+	if err != nil {
+		h.logger.Debug("error getting persons count", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Write([]byte(strconv.Itoa(count)))
 }

@@ -114,6 +114,7 @@ type PersonRepository interface {
 	GetPersonByNickname(nickname string) (*Person, error)
 	GetPersonById(id string) (*Person, error)
 	SearchPersons(term string) ([]Person, error)
+	GetPersonsCount() (int, error)
 }
 
 type PersonService struct {
@@ -140,4 +141,8 @@ func (svc *PersonService) GetPersonById(id string) (*Person, error) {
 
 func (svc *PersonService) SearchPersons(term string) ([]Person, error) {
 	return svc.repo.SearchPersons(term)
+}
+
+func (svc *PersonService) GetPersonsCount() (int, error) {
+	return svc.repo.GetPersonsCount()
 }
