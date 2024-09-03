@@ -5,6 +5,22 @@
 ### Concorrency
 The `net/http` lib create a new goroutine for each new connection. This means that concorrency is the default behaviour. This is [based on this article](https://eli.thegreenplace.net/2021/life-of-an-http-request-in-a-go-server/).
 
+
+### Context
+
+I see that the application has having timeout, this seems because the database takes long to respond. Because of this, I've impelmented context to timeout the requests.
+
+Example of logs I'm seeing in the stdout:
+```log
+time=2024-09-03T19:03:35.485Z level=INFO msg="error getting person" error="dial tcp 192.168.112.2:5432: connect: connection timed out"
+
+2024/09/03 19:02:48 http: superfluous response.WriteHeader call from go-rinha-de-backend-2023/internal/handler.(*PersonHandler).SearchPersons (handler.go:135)
+
+2024/09/03 19:02:46 http: superfluous response.WriteHeader call from go-rinha-de-backend-2023/internal/handler.(*PersonHandler).GetPersonById (handler.go:103)
+```
+
+I believe the context will help with this. I might lower the time, by firstly it is 10 seconds.
+
 ## Database
 
 ### Postgres

@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"errors"
 
 	"github.com/google/uuid"
@@ -110,10 +111,10 @@ func (p *Person) validateStack() error {
 }
 
 type PersonRepository interface {
-	CreatePerson(person *Person) error
-	GetPersonByNickname(nickname string) (*Person, error)
-	GetPersonById(id string) (*Person, error)
-	SearchPersons(term string) ([]Person, error)
+	CreatePerson(ctx context.Context, person *Person) error
+	GetPersonByNickname(ctx context.Context, nickname string) (*Person, error)
+	GetPersonById(ctx context.Context, id string) (*Person, error)
+	SearchPersons(ctx context.Context, term string) ([]Person, error)
 	GetPersonsCount() (int, error)
 }
 
@@ -125,22 +126,22 @@ func NewPersonService(repo PersonRepository) *PersonService {
 	return &PersonService{repo: repo}
 }
 
-func (svc *PersonService) CreatePerson(p *Person) error {
-	_, err := svc.repo.GetPersonByNickname(p.Nickname)
+func (svc *PersonService) CreatePerson(ctx context.Context, p *Person) error {
+	_, err := svc.repo.GetPersonByNickname(ctx, p.Nickname)
 
 	if errors.Is(err, ErrNicknameNotFound) {
-		return svc.repo.CreatePerson(p)
+		return svc.repo.CreatePerson(ctx, p)
 	}
 
 	return ErrPersonAlreadyExists
 }
 
-func (svc *PersonService) GetPersonById(id string) (*Person, error) {
-	return svc.repo.GetPersonById(id)
+func (svc *PersonService) GetPersonById(ctx context.Context, id string) (*Person, error) {
+	return svc.repo.GetPersonById(ctx, id)
 }
 
-func (svc *PersonService) SearchPersons(term string) ([]Person, error) {
-	return svc.repo.SearchPersons(term)
+func (svc *PersonService) SearchPersons(ctx context.Context, term string) ([]Person, error) {
+	return svc.repo.SearchPersons(ctx, term)
 }
 
 func (svc *PersonService) GetPersonsCount() (int, error) {

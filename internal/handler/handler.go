@@ -1,12 +1,14 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"go-rinha-de-backend-2023/internal/domain"
 	"log/slog"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type PersonHandler struct {
@@ -30,6 +32,9 @@ type CreatePersonRequest struct {
 
 // POST /pessoas
 func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	var request CreatePersonRequest
 	var err error
 
@@ -52,7 +57,7 @@ func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.svc.CreatePerson(person)
+	err = h.svc.CreatePerson(ctx, person)
 
 	if errors.Is(err, domain.ErrPersonAlreadyExists) {
 		h.logger.Debug("this person already exists", "error", err)
@@ -66,13 +71,15 @@ func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.logger.Debug("successful request")
 	w.Header().Set("Location", "/pessoas/"+person.ID)
 	w.WriteHeader(http.StatusCreated)
 }
 
 // GET /pessoas/[:id]
 func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	idString := r.PathValue("id")
 
 	if idString == "" {
@@ -81,7 +88,7 @@ func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	person, err := h.svc.GetPersonById(idString)
+	person, err := h.svc.GetPersonById(ctx, idString)
 
 	if errors.Is(err, domain.ErrPersonNotFound) {
 		h.logger.Debug("person not found", "error", err)
@@ -90,13 +97,13 @@ func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		h.logger.Debug("error getting person", "error", err)
+		h.logger.Info("error getting person", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	if err = json.NewEncoder(w).Encode(person); err != nil {
-		h.logger.Debug("error encoding response", "error", err)
+		h.logger.Info("error encoding response", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -105,6 +112,9 @@ func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	term := r.URL.Query().Get("t")
 
 	if term == "" {
@@ -115,10 +125,10 @@ func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
 
 	h.logger.Debug("searching persons", "term", term)
 
-	persons, err := h.svc.SearchPersons(term)
+	persons, err := h.svc.SearchPersons(ctx, term)
 
 	if err != nil {
-		h.logger.Debug("error searching persons", "error", err)
+		h.logger.Info("error searching persons", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -128,7 +138,7 @@ func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = json.NewEncoder(w).Encode(persons); err != nil {
-		h.logger.Debug("error encoding response", "error", err)
+		h.logger.Info("error encoding response", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -141,7 +151,7 @@ func (h *PersonHandler) GetPersonsCount(w http.ResponseWriter, r *http.Request) 
 	count, err := h.svc.GetPersonsCount()
 
 	if err != nil {
-		h.logger.Debug("error getting persons count", "error", err)
+		h.logger.Info("error getting persons count", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

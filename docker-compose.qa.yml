@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.qa
+    environment:
+      - LOG_LEVEL=INFO
     expose:
       - 80
     depends_on:

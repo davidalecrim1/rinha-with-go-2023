@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"go-rinha-de-backend-2023/internal/domain"
@@ -16,15 +17,15 @@ func NewPersonPostgreSqlRepository(db *sql.DB) *PersonPostgreSqlRepository {
 	return &PersonPostgreSqlRepository{db: db}
 }
 
-func (repo *PersonPostgreSqlRepository) CreatePerson(person *domain.Person) error {
+func (repo *PersonPostgreSqlRepository) CreatePerson(ctx context.Context, person *domain.Person) error {
 	query := "INSERT INTO persons (id, nickname, name, dob, stack) VALUES ($1, $2, $3, $4, $5)"
-	_, err := repo.db.Exec(query, person.ID, person.Nickname, person.Name, person.Dob, pq.Array(person.Stack))
+	_, err := repo.db.ExecContext(ctx, query, person.ID, person.Nickname, person.Name, person.Dob, pq.Array(person.Stack))
 	return err
 }
 
-func (repo *PersonPostgreSqlRepository) GetPersonByNickname(nickname string) (*domain.Person, error) {
+func (repo *PersonPostgreSqlRepository) GetPersonByNickname(ctx context.Context, nickname string) (*domain.Person, error) {
 	query := "SELECT id, nickname, name, dob, stack FROM persons WHERE nickname = $1"
-	row := repo.db.QueryRow(query, nickname)
+	row := repo.db.QueryRowContext(ctx, query, nickname)
 
 	var person domain.Person
 	err := row.Scan(&person.ID, &person.Nickname, &person.Name, &person.Dob, pq.Array(&person.Stack))
@@ -40,9 +41,9 @@ func (repo *PersonPostgreSqlRepository) GetPersonByNickname(nickname string) (*d
 	return &person, nil
 }
 
-func (repo *PersonPostgreSqlRepository) GetPersonById(id string) (*domain.Person, error) {
+func (repo *PersonPostgreSqlRepository) GetPersonById(ctx context.Context, id string) (*domain.Person, error) {
 	query := "SELECT id, nickname, name, dob, stack FROM persons WHERE id = $1"
-	row := repo.db.QueryRow(query, id)
+	row := repo.db.QueryRowContext(ctx, query, id)
 
 	var person domain.Person
 	err := row.Scan(&person.ID, &person.Nickname, &person.Name, &person.Dob, pq.Array(&person.Stack))
@@ -58,7 +59,7 @@ func (repo *PersonPostgreSqlRepository) GetPersonById(id string) (*domain.Person
 	return &person, nil
 }
 
-func (repo *PersonPostgreSqlRepository) SearchPersons(term string) ([]domain.Person, error) {
+func (repo *PersonPostgreSqlRepository) SearchPersons(ctx context.Context, term string) ([]domain.Person, error) {
 	query := `
 	SELECT id, nickname, name, dob, stack 
 	FROM persons, unnest(stack) as s
@@ -67,7 +68,7 @@ func (repo *PersonPostgreSqlRepository) SearchPersons(term string) ([]domain.Per
 	OR s ILIKE $1
 	LIMIT 50;`
 
-	rows, err := repo.db.Query(query, "%"+term+"%")
+	rows, err := repo.db.QueryContext(ctx, query, "%"+term+"%")
 
 	if err != nil {
 		return nil, err
