@@ -1,13 +1,13 @@
 version: '3.8'
 services:
-  go-backend-app-1:
-   <<: &go-backend-app1-config
+  go-app-1:
+   <<: &go-app1-config
     container_name: go-app-1
     build:
       context: .
       dockerfile: Dockerfile.qa
     environment:
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=ERROR
     expose:
       - 80
     depends_on:
@@ -19,7 +19,7 @@ services:
         limits:
           cpus: '0.125'
           memory: '0.5GB'
-  go-backend-app-2:
+  go-app-2:
     <<: *go-backend-app1-config
     container_name: go-app-2
   nginx:
