@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   go-backend-app-1:
-    container_name: go-backend-app-1
+    container_name: go-backend-dev-app-1
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -42,5 +42,5 @@ services:
 volumes:
   pgdata:
 networks:
-  default:
+  dev-default:
     driver: bridge
