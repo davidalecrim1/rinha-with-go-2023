@@ -20,7 +20,7 @@ services:
           cpus: '0.125'
           memory: '0.5GB'
   go-app-2:
-    <<: *go-backend-app1-config
+    <<: *go-app1-config
     container_name: go-app-2
   nginx:
     container_name: nginx

@@ -12,7 +12,6 @@ var (
 	ErrInvalidNickname     = errors.New("invalid nickname")
 	ErrInvalidDate         = errors.New("invalid date")
 	ErrInvalidStack        = errors.New("invalid stack")
-	ErrNicknameNotFound    = errors.New("nickname not found")
 	ErrPersonAlreadyExists = errors.New("person already exists")
 	ErrPersonNotFound      = errors.New("person not found")
 )
@@ -112,10 +111,10 @@ func (p *Person) validateStack() error {
 
 type PersonRepository interface {
 	CreatePerson(ctx context.Context, person *Person) error
-	GetPersonByNickname(ctx context.Context, nickname string) (*Person, error)
 	GetPersonById(ctx context.Context, id string) (*Person, error)
 	SearchPersons(ctx context.Context, term string) ([]Person, error)
 	GetPersonsCount() (int, error)
+	PersonExists(ctx context.Context, nickname string) (bool, error)
 }
 
 type PersonService struct {
@@ -127,10 +126,14 @@ func NewPersonService(repo PersonRepository) *PersonService {
 }
 
 func (svc *PersonService) CreatePerson(ctx context.Context, p *Person) error {
-	_, err := svc.repo.GetPersonByNickname(ctx, p.Nickname)
+	exists, err := svc.repo.PersonExists(ctx, p.Nickname)
 
-	if errors.Is(err, ErrNicknameNotFound) {
+	if !exists {
 		return svc.repo.CreatePerson(ctx, p)
+	}
+
+	if err != nil {
+		return err
 	}
 
 	return ErrPersonAlreadyExists

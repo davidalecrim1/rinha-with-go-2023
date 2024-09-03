@@ -19,7 +19,7 @@ time=2024-09-03T19:03:35.485Z level=INFO msg="error getting person" error="dial 
 2024/09/03 19:02:46 http: superfluous response.WriteHeader call from go-rinha-de-backend-2023/internal/handler.(*PersonHandler).GetPersonById (handler.go:103)
 ```
 
-I believe the context will help with this. I might lower the time, by firstly it is 10 seconds.
+I believe the context will help with this. I've tried 5 and 10 seconds. With 5 was not working well and the inserted people was 50% less.
 
 ## Database
 

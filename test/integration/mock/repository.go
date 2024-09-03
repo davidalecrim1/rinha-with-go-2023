@@ -21,13 +21,13 @@ func (m *MockRepository) CreatePerson(_ context.Context, person *domain.Person) 
 	return nil
 }
 
-func (m *MockRepository) GetPersonByNickname(_ context.Context, nickname string) (*domain.Person, error) {
+func (m *MockRepository) PersonExists(_ context.Context, nickname string) (bool, error) {
 	for _, person := range m.persons {
 		if person.Nickname == nickname {
-			return &person, nil
+			return true, nil
 		}
 	}
-	return nil, domain.ErrNicknameNotFound
+	return false, nil
 }
 
 func (m *MockRepository) GetPersonById(_ context.Context, id string) (*domain.Person, error) {

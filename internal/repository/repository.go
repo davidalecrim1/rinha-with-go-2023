@@ -23,22 +23,11 @@ func (repo *PersonPostgreSqlRepository) CreatePerson(ctx context.Context, person
 	return err
 }
 
-func (repo *PersonPostgreSqlRepository) GetPersonByNickname(ctx context.Context, nickname string) (*domain.Person, error) {
-	query := "SELECT id, nickname, name, dob, stack FROM persons WHERE nickname = $1"
-	row := repo.db.QueryRowContext(ctx, query, nickname)
-
-	var person domain.Person
-	err := row.Scan(&person.ID, &person.Nickname, &person.Name, &person.Dob, pq.Array(&person.Stack))
-
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, domain.ErrNicknameNotFound
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &person, nil
+func (repo *PersonPostgreSqlRepository) PersonExists(ctx context.Context, nickname string) (bool, error) {
+	query := "SELECT EXISTS (SELECT 1 FROM persons WHERE nickname = $1)"
+	var exists bool
+	err := repo.db.QueryRowContext(ctx, query, nickname).Scan(&exists)
+	return exists, err
 }
 
 func (repo *PersonPostgreSqlRepository) GetPersonById(ctx context.Context, id string) (*domain.Person, error) {
