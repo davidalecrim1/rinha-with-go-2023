@@ -26,3 +26,5 @@ go.work.sum
 
 # make folder file
 .DS_Store
+
+.diff

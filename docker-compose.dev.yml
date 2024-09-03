@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  go-backend-app-1:
-    container_name: go-backend-dev-app-1
+  go-app-1:
+    container_name: go-app-1
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -27,7 +27,7 @@ services:
       - default
   pgadmin-ui:
     image: dpage/pgadmin4
-    container_name: pgadmin-ui
+    container_name: pgadmin-ui-dev
     environment:
       PGADMIN_DEFAULT_EMAIL: "david.socer@hotmail.com"
       PGADMIN_DEFAULT_PASSWORD: "5J4JgqSffm8f7rE"
@@ -42,5 +42,5 @@ services:
 volumes:
   pgdata:
 networks:
-  dev-default:
+  default:
     driver: bridge

@@ -1,3 +1,4 @@
+# Tests using the docker-compose-dev.yml
 
 POST http://localhost:8080/pessoas
 
@@ -69,3 +70,18 @@ GET http://localhost:8080/pessoas?t=
 
 GET http://localhost:8080/contagem-pessoas
 // Expected: 200
+
+# Tests using the docker-compose-qa.yml
+
+GET http://localhost:9999/contagem-pessoas
+
+GET http://localhost:9999/pessoas?t=python
+
+POST http://localhost:9999/pessoas
+
+{
+    "apelido" : "ana",
+    "nome" : "Ana Barbosa",
+    "nascimento" : "1985-09-23",
+    "stack" : ["Python"]
+}
