@@ -2,6 +2,7 @@ package integration_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"go-rinha-de-backend-2023/internal/domain"
 	"go-rinha-de-backend-2023/internal/handler"
@@ -99,7 +100,7 @@ func TestPersonHandler_GetPersonById(t *testing.T) {
 
 		id := "5ce4668c-4710-4cfb-ae5f-38988d6d49cb"
 
-		err := repo.CreatePerson(&domain.Person{
+		err := repo.CreatePerson(context.Background(), &domain.Person{
 			ID:       id,
 			Nickname: "johndoe",
 			Name:     "John Doe",
@@ -126,7 +127,7 @@ func TestPersonHandler_SeachPersons(t *testing.T) {
 		h := handler.NewPersonHandler(logger, svc)
 
 		var err error
-		err = repo.CreatePerson(&domain.Person{
+		err = repo.CreatePerson(context.Background(), &domain.Person{
 			ID:       "5ce4668c-4710-4cfb-ae5f-38988d6d49cb",
 			Nickname: "johndoe",
 			Name:     "John Doe",
@@ -135,7 +136,7 @@ func TestPersonHandler_SeachPersons(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		err = repo.CreatePerson(&domain.Person{
+		err = repo.CreatePerson(context.Background(), &domain.Person{
 			ID:       "f7379ae8-8f9b-4cd5-8221-51efe19e721b",
 			Nickname: "janedoe",
 			Name:     "Jane Doe",
@@ -176,7 +177,7 @@ func TestPersonHandler_GetPersonsCount(t *testing.T) {
 		svc := domain.NewPersonService(repo)
 		h := handler.NewPersonHandler(logger, svc)
 
-		err := repo.CreatePerson(&domain.Person{
+		err := repo.CreatePerson(context.Background(), &domain.Person{
 			ID:       "5ce4668c-4710-4cfb-ae5f-38988d6d49cb",
 			Nickname: "johndoe",
 			Name:     "John Doe",
