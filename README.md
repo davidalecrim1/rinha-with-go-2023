@@ -1,8 +1,5 @@
 # Rinha de Backend (2023/Q3)
-Using this to learn some new things from the latest edtiions
-
-## Getting Started
-- Use the Makefile
+I’m using this to learn new things from the latest editions. I haven’t participated, but I’m considering giving it a try in the next ones.
 
 ## Good to Know
 `docker-compose.dev.yml` is for testing locally while developing.
