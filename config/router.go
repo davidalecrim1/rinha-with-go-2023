@@ -1,34 +1,18 @@
 package config
 
 import (
-	"go-rinha-de-backend-2023/internal/domain"
 	"go-rinha-de-backend-2023/internal/handler"
-	"go-rinha-de-backend-2023/internal/repository"
+	"log/slog"
 	"net/http"
-	"os"
 )
 
-// TODO: This has multiple reasons to change, fix it
-func InitializeRouter() error {
-	port := os.Getenv("PORT")
-
-	if port == "" {
-		port = "8080"
-	}
-
-	db := InitializeDatabase()
-	defer db.Close()
-
-	logger := NewLogger()
-	repo := repository.NewPersonPostgreSqlRepository(db) // TODO: add logger
-	service := domain.NewPersonService(repo)             // TODO: add logger
-	handler := handler.NewPersonHandler(logger, service)
-
+func InitializeRouter(h *handler.PersonHandler, port string, logger *slog.Logger) error {
 	router := http.NewServeMux()
-	router.HandleFunc("POST /pessoas", handler.CreatePerson)
-	router.HandleFunc("GET /pessoas/{id}", handler.GetPersonById)
-	router.HandleFunc("GET /pessoas", handler.SearchPersons)
-	router.HandleFunc("GET /contagem-pessoas", handler.GetPersonsCount)
+	router.HandleFunc("POST /pessoas", h.CreatePerson)
+	router.HandleFunc("GET /pessoas/{id}", h.GetPersonById)
+	router.HandleFunc("GET /pessoas", h.SearchPersons)
+	router.HandleFunc("GET /contagem-pessoas", h.GetPersonsCount)
 
+	logger.Info("server is running on port " + port)
 	return http.ListenAndServe(":"+port, router)
 }
