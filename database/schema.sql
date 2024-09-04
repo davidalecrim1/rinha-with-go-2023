@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS persons (
     name TEXT NOT NULL,
     dob TEXT NOT NULL,
     stack TEXT,
-    search TEXT GENERATED ALWAYS AS (
+    searchable TEXT GENERATED ALWAYS AS (
         nickname || ' ' || name || ' ' || lower(stack)
     ) STORED
 );
 
-CREATE INDEX idx_persons_search ON persons (search);
+CREATE INDEX CONCURRENTLY idx_persons_searchable ON persons (searchable);
