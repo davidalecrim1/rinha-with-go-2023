@@ -46,3 +46,24 @@ Results:
 - Added Go context to the queries in the database
 
 ### Fixed
+
+## [v0.0.5] - 2024-09-04
+ 
+Results:
+    - **/contagem-pessoas** -> 31798
+    - **Gatling output**: rinhabackendsimulation-20240904152625151
+    - commit: 8055928b1ad7ce07f1aa13af759a4da149cea3c3
+  
+### Added
+- Connection pool in the Postgre Driver
+- Created a search column with auto generate data in Postgres
+  - This increased the performance by from 8k/10k to 29/30k
+- Created an index for search column
+  - This was about 10% gain in inserted users.
+
+### Changed
+- Improved Nginx configuration
+  - Removed access logging
+
+### Fixed
+- Fixed the UNIQUE logic to be on the database side, and not to query the database first then insert the new person.
