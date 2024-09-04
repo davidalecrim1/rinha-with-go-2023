@@ -21,11 +21,22 @@ time=2024-09-03T19:03:35.485Z level=INFO msg="error getting person" error="dial 
 
 I believe the context will help with this. I've tried 5 and 10 seconds. With 5 was not working well and the inserted people was 50% less.
 
-## Database
+### CPU and Memory Limits
 
-### Postgres
+I've removed them to perform some tests. Seems I can reach about 21000 requests. I'll use this to learn and improve my code. [file:///Users/davidalecrim/Documents/Code/rinha-de-backend-2023/rinha-de-backend-2023-q3/stress-test/user-files/results/rinhabackendsimulation-20240904002934456/index.html](check the results).
 
-#### Configuration File
+### Go References
+
+I've been just practicing without lookling at another Go code to not be tempted to copy or test the concept I've haven't seen the need for. I've listed all the rinha versions in Go to explore later in the future:
+- | 2 | h4nkb31f0ng | 44270 | 15690 | [README](./stress-test/rinha-de-backend-2023-q3/participantes/h4nkb31f0ng/README.md) |
+- | 6 | isadora-souza | 42612 | 57327 | [README](./stress-test/rinha-de-backend-2023-q3/participantes/isadora-souza/README.md) |
+- | 8 | jrodrigues | 41193 | 44445 | [README](./stress-test/rinha-de-backend-2023-q3/participantes/jrodrigues/README.md) |
+- | 23 | luanpontes100 | 21315 | 54779 | [README](./stress-test/rinha-de-backend-2023-q3/participantes/luanpontes100/README.md) |
+
+
+## Database with Postgres
+
+### Configuration File
 This file can be retrieve in SQL QUERY `SHOW config_file`. The standard file can be then copied to my local machine and modified on demand.
 
 Even when doing that, when I pass the file using the configuration below:
@@ -49,9 +60,29 @@ But doing the below works just fine:
 
 Maybe I might be doing something wrong. I can dig more later.
 
+### Connection Pool
+When working with connection pools in PostgreSQL, it’s important to configure the maximum number of connections both in the PostgreSQL server itself and in the application using the database. Here’s how I’ve configured it:
+- **SetMaxOpenConns(n int)**: This method sets the maximum number of open connections to the database that the application can have at any given time. If all connections are in use and a new request is made, that request will block until a connection is freed up. This setting should be chosen carefully based on your database’s resources and your application’s needs.
+- **SetMaxIdleConns(n int)**: This method sets the maximum number of idle connections that can be retained in the connection pool. Idle connections can be reused for future queries without the overhead of opening a new connection. Setting this appropriately helps maintain a balance between resource usage and the ability to handle bursts of traffic efficiently.
+
+By configuring these settings properly, you can ensure that your application efficiently manages database connections, balancing performance with resource usage.
+
+### Tables
+I didn't thought to create a UNIQUE column in the table, it was better then performing one query to check the data before inserting in the table. This was a nice learning.
+
+Also, creating a column for searching using Postgres to auto generate was a nice thing I've learned too.
+
 ## Nginx
 
 ### Connection Pool
 Nginx uses worker processes to handle incoming connections. Each worker can handle many connections simultaneously using an asynchronous, non-blocking I/O model. For upstream connections (connections to backend servers), Nginx maintains a pool of connections to these servers, which it reuses to handle multiple client requests efficiently.
 
 The **keepalive** directive in the upstream block sets the maximum number of idle keepalive connections to upstream servers. This helps in reusing connections for multiple requests, reducing connection setup overhead.
+
+## Docker
+
+### Network
+
+There seems to be an increased latency in docker when using network mode as bridge, because this creates a virtual network over the real one. For this kind of application, the host mode seems to be more effective.
+
+But as I've found out, the host mode for network using Docker doesn't work on MacOS. I can research later how to use Linux on MacOS.
