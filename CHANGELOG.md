@@ -96,3 +96,18 @@ Results:
 ### Fixed
 - I forgot to remove the ILIKE in the search query instead of using just LIKE given I had changed the index to lower case.
 - I also did some clean up and other settings that didn't affected much the results.
+
+
+## [v0.0.8] - 2024-09-04
+ 
+Results:
+    - **/contagem-pessoas** -> 39957
+    - **Gatling output**: rinhabackendsimulation-20240904203628807
+    - commit: 81129dd3689806030d61de3913aa9dded460bf65
+  
+### Added
+
+### Changed
+- I've changed the Postgres cache size that will help with the CPU bound time.
+
+### Fixed
