@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   go-app-1:
     container_name: go-app-1
@@ -11,6 +10,9 @@ services:
       - postgres-db
     networks:
       - default
+    environment:
+      - PORT=8080
+      - LOG_LEVEL=DEBUG
   postgres-db:
     image: postgres:16.4-alpine3.20
     container_name: postgres-db

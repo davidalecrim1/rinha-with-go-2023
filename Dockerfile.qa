@@ -7,6 +7,4 @@ FROM scratch
 WORKDIR /app
 COPY --from=builder /app/server .
 COPY --from=builder /app/database/schema.sql database/schema.sql
-ENV PORT=80
-ENV LOG_LEVEL=ERROR
 CMD ["./server"]
