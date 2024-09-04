@@ -74,6 +74,10 @@ I didn't thought to create a UNIQUE column in the table, it was better then perf
 
 Also, creating a column for searching using Postgres to auto generate was a nice thing I've learned too.
 
+### General Configuration
+
+The **shared_buffers** setting in PostgreSQL controls how much memory is allocated for caching data pages. The default value is 128 MB, but it’s often increased in production environments to 25-40% of system RAM for better performance.
+
 
 ### Indexes and Search
 
@@ -98,3 +102,5 @@ The **keepalive** directive in the upstream block sets the maximum number of idl
 There seems to be an increased latency in docker when using network mode as bridge, because this creates a virtual network over the real one. For this kind of application, the host mode seems to be more effective.
 
 But as I've found out, the host mode for network using Docker doesn't work on MacOS. I can research later how to use Linux on MacOS.
+
+This is also the fault of something that was killing me, the **j.i.lOException Premature close**. This seemed to be the fault of nginx, but it's actually Docker's bridge mode.
