@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile.qa
     environment:
-      - LOG_LEVEL=ERROR
+      - LOG_LEVEL=INFO
       - PORT=80
     depends_on:
       - postgres-db
@@ -35,8 +35,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.250'
-          memory: '0.750GB'
+          cpus: '0.125'
+          memory: '0.5GB'
     networks:
       - default
   postgres-db:
@@ -50,14 +50,14 @@ services:
     - "5432:5432"
     volumes:
     - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-    command: ["postgres", "-c", "max_connections=150", "-c", "log_min_error_statement=fatal"]
+    command: ["postgres", "-c", "max_connections=100", "-c", "log_min_error_statement=fatal"]
     networks:
       - default
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: '1.250GB'
+          cpus: '1.125'
+          memory: '1.5GB'
   pgadmin-ui: # TODO: Remove for the final version
     image: dpage/pgadmin4
     container_name: pgadmin-ui
