@@ -4,7 +4,7 @@ services:
     container_name: go-app-1
     build:
       context: .
-      dockerfile: Dockerfile.qa
+      dockerfile: Dockerfile
     environment:
       - LOG_LEVEL=INFO
       - PORT=80
