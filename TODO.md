@@ -1,5 +1,4 @@
-- test create a new column with all the data or maybe another table for search the term (instead of using three ilike)
-- validate the need for indexes in the database
-- test some nginx configurations
-- maybe create an index for nicknames given i run it when inserting
-- 
+- try out the postgres gist search 
+- create an alternativa branch and test with some frameworks like fiber and gin (just for fun, net/http is more than enough)
+- try out the bulk insert used by leo vargas using redis for cache and a worker to insert it in the database
+- try out in linux with network_mode=host

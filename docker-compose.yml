@@ -58,7 +58,7 @@ services:
         limits:
           cpus: '1.125'
           memory: '1.5GB'
-  pgadmin-ui:
+  pgadmin-ui: # This is to help monitor postgres on tests. Not part of rinha.
     image: dpage/pgadmin4
     container_name: pgadmin-ui
     environment:
