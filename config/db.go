@@ -14,5 +14,9 @@ func InitializeDatabase() *sql.DB {
 	if err != nil {
 		log.Fatalf("error opening connection to database: %v", err)
 	}
+
+	db.SetMaxOpenConns(100)
+	db.SetMaxIdleConns(50)
+
 	return db
 }
