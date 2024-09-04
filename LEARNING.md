@@ -60,6 +60,7 @@ But doing the below works just fine:
 
 Maybe I might be doing something wrong. I can dig more later.
 
+
 ### Connection Pool
 When working with connection pools in PostgreSQL, it’s important to configure the maximum number of connections both in the PostgreSQL server itself and in the application using the database. Here’s how I’ve configured it:
 - **SetMaxOpenConns(n int)**: This method sets the maximum number of open connections to the database that the application can have at any given time. If all connections are in use and a new request is made, that request will block until a connection is freed up. This setting should be chosen carefully based on your database’s resources and your application’s needs.
@@ -67,10 +68,21 @@ When working with connection pools in PostgreSQL, it’s important to configure 
 
 By configuring these settings properly, you can ensure that your application efficiently manages database connections, balancing performance with resource usage.
 
+
 ### Tables
 I didn't thought to create a UNIQUE column in the table, it was better then performing one query to check the data before inserting in the table. This was a nice learning.
 
 Also, creating a column for searching using Postgres to auto generate was a nice thing I've learned too.
+
+
+### Indexes and Search
+
+#### LIKE vs ILIKE
+I was using the ILIKE operation in the new search index instead of LIKE with all the case in lower on the index, seems that this was causing a major performance issue on the database side, removing it provided a 12k increase in the persons inserted in the database.
+
+#### Concorrency
+When creating an index with the `CONCURRENTLY` option, PostgreSQL builds the index without locking the table for writes. This allows other operations to continue on the table while the index is being created. This is particularly useful for large tables or production environments where downtime needs to be minimized.
+
 
 ## Nginx
 

@@ -67,3 +67,32 @@ Results:
 
 ### Fixed
 - Fixed the UNIQUE logic to be on the database side, and not to query the database first then insert the new person.
+
+## [v0.0.6] - 2024-09-04
+ 
+Results:
+    - **/contagem-pessoas** -> 24804
+    - **Gatling output**: rinhabackendsimulation-20240904172439247
+    - commit: 1985849ff84e3fe073a6cc4c41f5bd65dbe5bd12
+  
+### Added
+
+### Changed
+
+### Fixed
+- There was a validation bug adding more results then it should in the backend. I discovered that removing CPU and Memory limitations
+
+## [v0.0.7] - 2024-09-04
+ 
+Results:
+    - **/contagem-pessoas** -> 36874
+    - **Gatling output**: rinhabackendsimulation-20240904175808154
+    - commit: 0224100a244624597c4430beb0480cf1bf242f7f
+  
+### Added
+
+### Changed
+
+### Fixed
+- I forgot to remove the ILIKE in the search query instead of using just LIKE given I had changed the index to lower case.
+- I also did some clean up and other settings that didn't affected much the results.
