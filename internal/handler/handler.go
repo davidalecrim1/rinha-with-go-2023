@@ -107,8 +107,6 @@ func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }
 
 func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
@@ -142,8 +140,6 @@ func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }
 
 // GET /contagem-pessoas
