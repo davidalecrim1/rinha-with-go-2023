@@ -4,16 +4,13 @@ services:
     container_name: go-app-1
     build:
       context: .
-      dockerfile: Dockerfile.qa
+      dockerfile: Dockerfile
     environment:
       - LOG_LEVEL=INFO
-      - PORT=80
+      - PORT=8081
     depends_on:
       - postgres-db
-    expose:
-      - 80
-    networks:
-      - default
+    network_mode: host
     deploy:
       resources:
         limits:
@@ -22,16 +19,21 @@ services:
   go-app-2:
     <<: *go-app1-config
     container_name: go-app-2
+    environment:
+      - LOG_LEVEL=INFO
+      - PORT=8082
+    depends_on:
+      - postgres-db
+    network_mode: host
   nginx:
     container_name: nginx
     image: nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.linux.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - go-app-1
       - go-app-2
-    ports:
-      - "9999:9999"
+    network_mode: host
     deploy:
       resources:
         limits:
@@ -46,32 +48,16 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       POSTGRES_DB: persons
-    ports:
-    - "5432:5432"
+      POSTGRES_PORT: 5432
+    network_mode: host
     volumes:
     - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     command: ["postgres", "-c", "max_connections=100", "-c", "log_min_error_statement=fatal", "-c", "shared_buffers=512MB"]
-    networks:
-      - default
     deploy:
       resources:
         limits:
           cpus: '1.125'
           memory: '1.5GB'
-  pgadmin-ui: # TODO: Remove for the final version
-    image: dpage/pgadmin4
-    container_name: pgadmin-ui
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "david.socer@hotmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "5J4JgqSffm8f7rE"
-    ports:
-      - "16543:80"
-    volumes:
-      - ~/.pgadmin4-data:/var/lib/pgadmin
-    depends_on:
-      - postgres-db
-    networks:
-      - default
 networks:
   default:
     driver: bridge
