@@ -43,47 +43,32 @@ func NewPerson(nickname string, name string, dob string, stack []string) (*Perso
 
 func (p *Person) Validate() error {
 	var err error
-
 	if err = p.validateName(); err != nil {
 		return err
 	}
-
 	if err = p.validateNickname(); err != nil {
 		return err
 	}
-
 	if err = p.validateDate(); err != nil {
 		return err
 	}
-
 	if err = p.validateStack(); err != nil {
 		return err
 	}
-
 	return nil
 }
 
 func (p *Person) validateName() error {
-	if p.Name == "" {
+	if p.Name == "" || len(p.Name) > 100 {
 		return ErrInvalidName
 	}
-
-	if len(p.Name) > 100 {
-		return ErrInvalidName
-	}
-
 	return nil
 }
 
 func (p *Person) validateNickname() error {
-	if p.Nickname == "" {
+	if p.Nickname == "" || len(p.Nickname) > 32 {
 		return ErrInvalidNickname
 	}
-
-	if len(p.Nickname) > 32 {
-		return ErrInvalidNickname
-	}
-
 	return nil
 }
 
@@ -91,7 +76,6 @@ func (p *Person) validateDate() error {
 	if len(p.Dob) != 10 {
 		return ErrInvalidDate
 	}
-
 	return nil
 }
 
@@ -114,7 +98,6 @@ type PersonRepository interface {
 	GetPersonById(ctx context.Context, id string) (*Person, error)
 	SearchPersons(ctx context.Context, term string) ([]Person, error)
 	GetPersonsCount() (int, error)
-	PersonExists(ctx context.Context, nickname string) (bool, error)
 }
 
 type PersonService struct {
@@ -126,17 +109,7 @@ func NewPersonService(repo PersonRepository) *PersonService {
 }
 
 func (svc *PersonService) CreatePerson(ctx context.Context, p *Person) error {
-	exists, err := svc.repo.PersonExists(ctx, p.Nickname)
-
-	if !exists {
-		return svc.repo.CreatePerson(ctx, p)
-	}
-
-	if err != nil {
-		return err
-	}
-
-	return ErrPersonAlreadyExists
+	return svc.repo.CreatePerson(ctx, p)
 }
 
 func (svc *PersonService) GetPersonById(ctx context.Context, id string) (*Person, error) {

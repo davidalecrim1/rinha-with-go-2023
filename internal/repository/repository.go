@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"go-rinha-de-backend-2023/internal/domain"
+	"strings"
 
 	"github.com/lib/pq"
 )
@@ -19,19 +20,21 @@ func NewPersonPostgreSqlRepository(db *sql.DB) *PersonPostgreSqlRepository {
 
 func (repo *PersonPostgreSqlRepository) CreatePerson(ctx context.Context, person *domain.Person) error {
 	query := "INSERT INTO persons (id, nickname, name, dob, stack) VALUES ($1, $2, $3, $4, $5)"
-	_, err := repo.db.ExecContext(ctx, query, person.ID, person.Nickname, person.Name, person.Dob, pq.Array(person.Stack))
+	_, err := repo.db.ExecContext(ctx, query, person.ID, person.Nickname, person.Name, person.Dob, strings.Join(person.Stack, " | "))
+
+	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok {
+			if pqErr.Code == "23505" {
+				return domain.ErrPersonAlreadyExists
+			}
+		}
+	}
+
 	return err
 }
 
-func (repo *PersonPostgreSqlRepository) PersonExists(ctx context.Context, nickname string) (bool, error) {
-	query := "SELECT EXISTS (SELECT 1 FROM persons WHERE nickname = $1)"
-	var exists bool
-	err := repo.db.QueryRowContext(ctx, query, nickname).Scan(&exists)
-	return exists, err
-}
-
 func (repo *PersonPostgreSqlRepository) GetPersonById(ctx context.Context, id string) (*domain.Person, error) {
-	query := "SELECT id, nickname, name, dob, stack FROM persons WHERE id = $1"
+	query := "SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack FROM persons WHERE id = $1"
 	row := repo.db.QueryRowContext(ctx, query, id)
 
 	var person domain.Person
@@ -50,12 +53,9 @@ func (repo *PersonPostgreSqlRepository) GetPersonById(ctx context.Context, id st
 
 func (repo *PersonPostgreSqlRepository) SearchPersons(ctx context.Context, term string) ([]domain.Person, error) {
 	query := `
-	SELECT id, nickname, name, dob, stack 
-	FROM persons, unnest(stack) as s
-	WHERE nickname ILIKE $1
-	OR name ILIKE $1
-	OR s ILIKE $1
-	LIMIT 50;`
+	SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack 
+	FROM persons
+	WHERE search ILIKE $1`
 
 	rows, err := repo.db.QueryContext(ctx, query, "%"+term+"%")
 
@@ -79,7 +79,7 @@ func (repo *PersonPostgreSqlRepository) SearchPersons(ctx context.Context, term 
 }
 
 func (repo *PersonPostgreSqlRepository) GetPersonsCount() (int, error) {
-	query := "SELECT COUNT(*) FROM persons"
+	query := "SELECT COUNT(id) FROM persons"
 	var count int
 	err := repo.db.QueryRow(query).Scan(&count)
 	return count, err
