@@ -155,3 +155,29 @@ func TestPerson_Validate(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkPerson_Validate(b *testing.B) {
+	person := domain.Person{
+		ID:       "1",
+		Nickname: "john",
+		Name:     "John Doe",
+		Dob:      "1990-01-01",
+		Stack:    []string{"Go", "Python"},
+	}
+
+	for i := 0; i < b.N; i++ {
+		person.Validate()
+	}
+
+}
+
+func BenchmarkPerson_NewPerson(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = domain.NewPerson(
+			"john",
+			"John Doe",
+			"1990-01-01",
+			[]string{"Go", "Python"},
+		)
+	}
+}

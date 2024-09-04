@@ -73,9 +73,53 @@ GET http://localhost:8080/contagem-pessoas
 
 # Tests using the docker-compose-qa.yml
 
+POST http://localhost:9999/pessoas
+
+{
+    "apelido" : "ana",
+    "nome" : "Ana Barbosa",
+    "nascimento" : "1985-09-23",
+    "stack" : ["Python"]
+}
+
+POST http://localhost:9999/pessoas
+
+{
+    "apelido" : "john",
+    "nome" : "John Doe",
+    "nascimento" : "1985-09-23",
+    "stack" : ["Node"]
+}
+
+POST http://localhost:9999/pessoas
+
+{
+    "apelido" : "markus",
+    "nome" : "Markus Santana",
+    "nascimento" : "1985-09-23",
+    "stack" : ["Node", "Python"]
+}
+
+POST http://localhost:9999/pessoas
+
+{
+    "apelido" : "joana",
+    "nome" : "Joana Santana",
+    "nascimento" : "INVALID_DATE",
+    "stack" : ["Node", "Python"]
+}
+
 GET http://localhost:9999/contagem-pessoas
+Connection: keep-alive
+# This makes new connections faster given the opened TCP connection.
+
+GET http://localhost:9999/contagem-pessoas
+Connection: close 
+# This increases the latency given the TCP connection needs to be reopen.
 
 GET http://localhost:9999/pessoas?t=python
+
+GET http://localhost:9999/pessoas?t=node
 
 POST http://localhost:9999/pessoas
 
@@ -85,3 +129,7 @@ POST http://localhost:9999/pessoas
     "nascimento" : "1985-09-23",
     "stack" : ["Python"]
 }
+
+GET http://localhost:9999/pessoas/2636d0b0-da9e-4d9e-aeb6-b1f1ba0cf089
+
+GET http://localhost:9999/pessoas?t=mJTySfIOlaCMwZXZUnzwGZVX+pyLLxA

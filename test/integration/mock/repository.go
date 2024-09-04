@@ -17,17 +17,14 @@ func NewMockRepository() *MockRepository {
 }
 
 func (m *MockRepository) CreatePerson(_ context.Context, person *domain.Person) error {
-	m.persons = append(m.persons, *person)
-	return nil
-}
-
-func (m *MockRepository) PersonExists(_ context.Context, nickname string) (bool, error) {
-	for _, person := range m.persons {
-		if person.Nickname == nickname {
-			return true, nil
+	for _, p := range m.persons {
+		if p.Nickname == person.Nickname {
+			return domain.ErrPersonAlreadyExists
 		}
 	}
-	return false, nil
+
+	m.persons = append(m.persons, *person)
+	return nil
 }
 
 func (m *MockRepository) GetPersonById(_ context.Context, id string) (*domain.Person, error) {
