@@ -76,10 +76,21 @@ func (p *Person) validateDate() error {
 	if len(p.Dob) != 10 {
 		return ErrInvalidDate
 	}
+	if p.Dob[4] != '-' || p.Dob[7] != '-' {
+		return ErrInvalidDate
+	}
 	return nil
 }
 
 func (p *Person) validateStack() error {
+	if p.Stack == nil {
+		return ErrInvalidStack
+	}
+
+	if len(p.Stack) == 0 {
+		return ErrInvalidStack
+	}
+
 	for _, stack := range p.Stack {
 		if stack == "" {
 			return ErrInvalidStack
