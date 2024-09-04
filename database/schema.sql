@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS persons (
     dob TEXT NOT NULL,
     stack TEXT,
     search TEXT GENERATED ALWAYS AS (
-        nickname || ' ' || name || ' ' || stack
+        nickname || ' ' || name || ' ' || lower(stack)
     ) STORED
 );
 
