@@ -55,7 +55,7 @@ func (repo *PersonPostgreSqlRepository) SearchPersons(ctx context.Context, term 
 	query := `
 	SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack 
 	FROM persons
-	WHERE search ILIKE $1`
+	WHERE search LIKE $1`
 
 	rows, err := repo.db.QueryContext(ctx, query, "%"+term+"%")
 
