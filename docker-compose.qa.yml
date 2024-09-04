@@ -50,7 +50,7 @@ services:
     - "5432:5432"
     volumes:
     - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-    command: ["postgres", "-c", "max_connections=150"]
+    command: ["postgres", "-c", "max_connections=150", "-c", "log_min_error_statement=fatal"]
     networks:
       - default
     deploy:
