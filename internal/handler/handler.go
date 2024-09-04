@@ -43,6 +43,7 @@ func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
 
 	person, err := domain.NewPerson(
 		request.Nickname,
