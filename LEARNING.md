@@ -133,3 +133,9 @@ git submodule add https://github.com/zanfranceschi/rinha-de-backend-2023-q3 ./st
 ```
 
 This means, some git cache was stuck and didn't allow me to readd the submodule and download itś files.
+
+## References
+
+The greatest inspiration in all the learning done here is from:
+- https://www.youtube.com/watch?v=EifK2a_5K_U
+- https://www.youtube.com/watch?v=-yGHG3pnHLg
