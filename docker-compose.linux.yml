@@ -8,6 +8,7 @@ services:
     environment:
       - LOG_LEVEL=INFO
       - PORT=8081
+      - DB_HOST=localhost
     depends_on:
       - postgres-db
     network_mode: "host"
