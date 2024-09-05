@@ -130,3 +130,17 @@ Restrictions:
 - new nginx configuration to also help with IO Exception.
 
 ### Fixed
+
+## [v0.0.10] - 2024-09-05
+ 
+Results:
+    - **/contagem-pessoas** -> 46240
+    - **Gatling output**: rinhabackendsimulation-20240905214422519
+    - commit: 7f638c96313dfb2d8128eca3730cdc346eb2d225
+  
+### Added
+
+### Changed
+- changed from `pg` to `pgx and pgxpool`, this was the bottleneck that was somehow making Postgres have more latency or use more resources to respond.
+
+### Fixed
