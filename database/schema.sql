@@ -18,4 +18,4 @@ CREATE INDEX
 
 -- CREATE INDEX
 --     CONCURRENTLY IF NOT EXISTS idx_people_searchable ON public.people USING gin
---     (searchable gin_trgm_ops);
+--     (searchable public.gin_trgm_ops);
