@@ -104,3 +104,32 @@ There seems to be an increased latency in docker when using network mode as brid
 But as I've found out, the host mode for network using Docker doesn't work on MacOS. I can research later how to use Linux on MacOS.
 
 This is also the fault of something that was killing me, the **j.i.lOException Premature close**. This seemed to be the fault of nginx, but it's actually Docker's bridge mode.
+
+### Docker Desktop
+
+The issue you're facing with network_mode: host on Docker Desktop is due to how Docker Desktop runs inside a virtual machine (VM). When you specify network_mode: host, it applies to the VM, not your actual Ubuntu host. This means that the container won't directly access your Ubuntu machine's network, but rather the VM's network.
+
+To achieve direct access to your host's network, you don't necessarily need to uninstall Docker Desktop, but you'd need to run Docker directly on your host without Docker Desktop. This way, network_mode: host will correctly map the container's network directly to your host's network.
+
+If your goal is to access services or networks directly from your Ubuntu system without going through the VM, switching to the native Docker installation (without Docker Desktop) would solve this.
+
+This is interesting because the best way to use Docker is to only run the Docker Engine in Linux, without Docker Desktop or anything else. There is nothing we can do, what is made for Linux only runs well in Linux.
+
+Given that, I needed:
+- To uninstall Docker and Docker Desktop
+- Remove the .docker folder in my home directory
+- Reinstall Docker
+- Running it with host mode
+- BAM! It worked!
+
+## Git
+
+### Submodules
+Git submodules has made my life hell sometimes. This usually happens when I need to pull the submodule into my current dir. This usually didn't worked, as well with re addin the submodule. Why worked was:
+```bash
+git rm --cached stress-test/rinha-de-backend-2023-q3
+
+git submodule add https://github.com/zanfranceschi/rinha-de-backend-2023-q3 ./stress-test/rinha-de-backend-2023-q3
+```
+
+This means, some git cache was stuck and didn't allow me to readd the submodule and download itś files.
