@@ -1,4 +1,6 @@
-CREATE TABLE IF NOT EXISTS persons (
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+
+CREATE TABLE IF NOT EXISTS people (
     id UUID PRIMARY KEY,
     nickname TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
@@ -9,4 +11,11 @@ CREATE TABLE IF NOT EXISTS persons (
     ) STORED
 );
 
-CREATE INDEX CONCURRENTLY idx_persons_searchable ON persons (searchable);
+/* I will test using GiST and GIN */
+CREATE INDEX
+    CONCURRENTLY IF NOT EXISTS idx_people_searchable ON public.people USING gist
+    (searchable public.gist_trgm_ops);
+
+-- CREATE INDEX
+--     CONCURRENTLY IF NOT EXISTS idx_people_searchable ON public.people USING gin
+--     (searchable gin_trgm_ops);
