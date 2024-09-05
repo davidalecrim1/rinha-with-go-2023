@@ -111,3 +111,22 @@ Results:
 - I've changed the Postgres cache size that will help with the CPU bound time.
 
 ### Fixed
+
+## [v0.0.9] - 2024-09-04
+ 
+Results:
+    - **/contagem-pessoas** -> 46500
+    - **Gatling output**: rinhabackendsimulation-20240905114121892
+    - commit: 81129dd3689806030d61de3913aa9dded460bf65
+
+Restrictions:
+    - Using Linux
+    - Removing the CPU/Memory limits because I haven't implemented the GiSP feature in Postgres.
+  
+### Added
+
+### Changed
+- network_mode=host that will remove the IO Exception.
+- new nginx configuration to also help with IO Exception.
+
+### Fixed
