@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS people (
     ) STORED
 );
 
-/* I will test using GiST and GIN */
+-- I will test using GiST and GIN
 CREATE INDEX
     CONCURRENTLY IF NOT EXISTS idx_people_searchable ON public.people USING gist
     (searchable public.gist_trgm_ops);
