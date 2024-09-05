@@ -7,28 +7,28 @@ import (
 )
 
 type MockRepository struct {
-	persons []domain.Person
+	people []domain.Person
 }
 
 func NewMockRepository() *MockRepository {
 	return &MockRepository{
-		persons: make([]domain.Person, 0),
+		people: make([]domain.Person, 0),
 	}
 }
 
 func (m *MockRepository) CreatePerson(_ context.Context, person *domain.Person) error {
-	for _, p := range m.persons {
+	for _, p := range m.people {
 		if p.Nickname == person.Nickname {
 			return domain.ErrPersonAlreadyExists
 		}
 	}
 
-	m.persons = append(m.persons, *person)
+	m.people = append(m.people, *person)
 	return nil
 }
 
 func (m *MockRepository) GetPersonById(_ context.Context, id string) (*domain.Person, error) {
-	for _, person := range m.persons {
+	for _, person := range m.people {
 		if person.ID == id {
 			return &person, nil
 		}
@@ -37,22 +37,22 @@ func (m *MockRepository) GetPersonById(_ context.Context, id string) (*domain.Pe
 }
 
 func (m *MockRepository) SearchPersons(_ context.Context, term string) ([]domain.Person, error) {
-	var persons []domain.Person = make([]domain.Person, 0)
-	for _, person := range m.persons {
+	var people []domain.Person = make([]domain.Person, 0)
+	for _, person := range m.people {
 		if strings.Contains(person.Nickname, term) || strings.Contains(person.Name, term) {
-			persons = append(persons, person)
+			people = append(people, person)
 		} else {
 			for _, stack := range person.Stack {
 				if strings.Contains(stack, term) {
-					persons = append(persons, person)
+					people = append(people, person)
 					break
 				}
 			}
 		}
 	}
-	return persons, nil
+	return people, nil
 }
 
 func (m *MockRepository) GetPersonsCount() (int, error) {
-	return len(m.persons), nil
+	return len(m.people), nil
 }

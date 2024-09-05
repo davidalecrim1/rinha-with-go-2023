@@ -19,7 +19,7 @@ func NewPersonPostgreSqlRepository(db *sql.DB) *PersonPostgreSqlRepository {
 }
 
 func (repo *PersonPostgreSqlRepository) CreatePerson(ctx context.Context, person *domain.Person) error {
-	query := "INSERT INTO persons (id, nickname, name, dob, stack) VALUES ($1, $2, $3, $4, $5)"
+	query := "INSERT INTO people (id, nickname, name, dob, stack) VALUES ($1, $2, $3, $4, $5)"
 	_, err := repo.db.ExecContext(ctx, query, person.ID, person.Nickname, person.Name, person.Dob, strings.Join(person.Stack, " | "))
 
 	if err != nil {
@@ -34,7 +34,7 @@ func (repo *PersonPostgreSqlRepository) CreatePerson(ctx context.Context, person
 }
 
 func (repo *PersonPostgreSqlRepository) GetPersonById(ctx context.Context, id string) (*domain.Person, error) {
-	query := "SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack FROM persons WHERE id = $1"
+	query := "SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack FROM people WHERE id = $1"
 	row := repo.db.QueryRowContext(ctx, query, id)
 
 	var person domain.Person
@@ -54,7 +54,7 @@ func (repo *PersonPostgreSqlRepository) GetPersonById(ctx context.Context, id st
 func (repo *PersonPostgreSqlRepository) SearchPersons(ctx context.Context, term string) ([]domain.Person, error) {
 	query := `
 	SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack 
-	FROM persons
+	FROM people
 	WHERE searchable LIKE $1`
 
 	rows, err := repo.db.QueryContext(ctx, query, "%"+term+"%")
@@ -65,21 +65,21 @@ func (repo *PersonPostgreSqlRepository) SearchPersons(ctx context.Context, term 
 
 	defer rows.Close()
 
-	var persons []domain.Person = make([]domain.Person, 0)
+	var people []domain.Person = make([]domain.Person, 0)
 	for rows.Next() {
 		var person domain.Person
 		err := rows.Scan(&person.ID, &person.Nickname, &person.Name, &person.Dob, pq.Array(&person.Stack))
 		if err != nil {
 			return nil, err
 		}
-		persons = append(persons, person)
+		people = append(people, person)
 	}
 
-	return persons, nil
+	return people, nil
 }
 
 func (repo *PersonPostgreSqlRepository) GetPersonsCount() (int, error) {
-	query := "SELECT COUNT(id) FROM persons"
+	query := "SELECT COUNT(id) FROM people"
 	var count int
 	err := repo.db.QueryRow(query).Scan(&count)
 	return count, err

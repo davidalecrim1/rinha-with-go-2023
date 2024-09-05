@@ -122,21 +122,21 @@ func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.logger.Debug("searching persons", "term", term)
+	h.logger.Debug("searching people", "term", term)
 
-	persons, err := h.svc.SearchPersons(ctx, term)
+	people, err := h.svc.SearchPersons(ctx, term)
 
 	if err != nil {
-		h.logger.Info("error searching persons", "error", err)
+		h.logger.Info("error searching people", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	if len(persons) == 0 {
-		h.logger.Debug("no persons found")
+	if len(people) == 0 {
+		h.logger.Debug("no people found")
 	}
 
-	if err = json.NewEncoder(w).Encode(persons); err != nil {
+	if err = json.NewEncoder(w).Encode(people); err != nil {
 		h.logger.Info("error encoding response", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -148,7 +148,7 @@ func (h *PersonHandler) GetPersonsCount(w http.ResponseWriter, r *http.Request) 
 	count, err := h.svc.GetPersonsCount()
 
 	if err != nil {
-		h.logger.Info("error getting persons count", "error", err)
+		h.logger.Info("error getting people count", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

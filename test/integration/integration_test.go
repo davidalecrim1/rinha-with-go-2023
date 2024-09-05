@@ -119,7 +119,7 @@ func TestPersonHandler_GetPersonById(t *testing.T) {
 }
 
 func TestPersonHandler_SeachPersons(t *testing.T) {
-	t.Run("search persons by term with results", func(t *testing.T) {
+	t.Run("search people by term with results", func(t *testing.T) {
 		logger := mock.NewLogger()
 
 		repo := mock.NewMockRepository()
@@ -153,7 +153,7 @@ func TestPersonHandler_SeachPersons(t *testing.T) {
 		assert.Contains(t, rr.Body.String(), "johndoe")
 	})
 
-	t.Run("search persons with empty results", func(t *testing.T) {
+	t.Run("search people with empty results", func(t *testing.T) {
 		logger := mock.NewLogger()
 
 		repo := mock.NewMockRepository()
@@ -170,7 +170,7 @@ func TestPersonHandler_SeachPersons(t *testing.T) {
 }
 
 func TestPersonHandler_GetPersonsCount(t *testing.T) {
-	t.Run("get persons count", func(t *testing.T) {
+	t.Run("get people count", func(t *testing.T) {
 		logger := mock.NewLogger()
 
 		repo := mock.NewMockRepository()
