@@ -102,6 +102,11 @@ I was using the ILIKE operation in the new search index instead of LIKE with all
 When creating an index with the `CONCURRENTLY` option, PostgreSQL builds the index without locking the table for writes. This allows other operations to continue on the table while the index is being created. This is particularly useful for large tables or production environments where downtime needs to be minimized.
 
 
+### Queries
+
+All databases have a command called `explain analyze` that helps understand how a query will be executed. It's a good idea to analyze if a query will be slow.
+
+
 ## Nginx
 
 ### Connection Pool

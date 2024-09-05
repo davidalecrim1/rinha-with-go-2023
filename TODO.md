@@ -1,5 +1,4 @@
-- try out the postgres gist search 
 - create an alternativa branch and test with some frameworks like fiber and gin (just for fun, net/http is more than enough)
 - try out the bulk insert used by leo vargas using redis for cache and a worker to insert it in the database
-- try out in linux with network_mode=host
 - make the other attributes of the database environment variables
+- test explain analize with gist and with gin and without any of those to see the execution time.
