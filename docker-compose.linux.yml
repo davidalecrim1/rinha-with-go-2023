@@ -26,7 +26,7 @@ services:
       - DB_HOST=localhost
   nginx:
     container_name: nginx
-    image: nginx:latest
+    image: nginx:1.27.1-alpine
     volumes:
       - ./nginx.linux.conf:/etc/nginx/nginx.conf:ro
     depends_on:
