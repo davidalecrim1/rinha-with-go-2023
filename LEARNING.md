@@ -21,9 +21,14 @@ time=2024-09-03T19:03:35.485Z level=INFO msg="error getting person" error="dial 
 
 I believe the context will help with this. I've tried 5 and 10 seconds. With 5 was not working well and the inserted people was 50% less.
 
+
 ### CPU and Memory Limits
 
 I've removed them to perform some tests. Seems I can reach about 21000 requests. I'll use this to learn and improve my code. [file:///Users/davidalecrim/Documents/Code/rinha-de-backend-2023/rinha-de-backend-2023-q3/stress-test/user-files/results/rinhabackendsimulation-20240904002934456/index.html](check the results).
+
+
+### Database Drivers
+They can impact on performance and how a connection is handled well or poorly. I was using the standard `pg` that resulted in 39k inserted people, but when I switched to `pgx and pgxpool`, this was increased to 46k.
 
 ### Go References
 
