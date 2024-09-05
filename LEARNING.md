@@ -74,12 +74,26 @@ I didn't thought to create a UNIQUE column in the table, it was better then perf
 
 Also, creating a column for searching using Postgres to auto generate was a nice thing I've learned too.
 
-### General Configuration
 
+### General Configuration
 The **shared_buffers** setting in PostgreSQL controls how much memory is allocated for caching data pages. The default value is 128 MB, but it’s often increased in production environments to 25-40% of system RAM for better performance.
 
 
-### Indexes and Search
+### Full Text Search
+The feature full text search is a well known technique for searching data, this is used in Google, X/Twitter and other applications. In Postgres, we have two flavours of it:
+  * GIN (Generalized Inverted Index)
+    * Use case: JSONB, Arrays, etc
+  * GiST (Generalized Search Tree)
+    * Use case: Text
+
+
+#### Deep Drive
+* **GiST (Generalized Search Tree)**: GiST is a flexible index structure in PostgreSQL that can handle various types of queries. It supports a range of search algorithms but is not as optimized for text search as GIN when using trigram indexing.
+* **GIN (Generalized Inverted Index):** GIN is optimized for text search and full-text indexing, especially when used with the pg_trgm extension. It allows for fast lookups for similarity searches using trigrams.
+* **Trigrams (pg_trgm):** Trigrams are sets of three consecutive characters from a string. By breaking strings into trigrams, PostgreSQL can perform efficient fuzzy text matching and similarity searches, especially for partial matches or when handling misspelled text.
+
+
+### Indexes
 
 #### LIKE vs ILIKE
 I was using the ILIKE operation in the new search index instead of LIKE with all the case in lower on the index, seems that this was causing a major performance issue on the database side, removing it provided a 12k increase in the persons inserted in the database.
