@@ -8,7 +8,7 @@ POST http://localhost:8080/pessoas
     "nascimento" : "1985-09-23",
     "stack" : ["Python"]
 }
-// Expected: 200
+### Expected: 200
 
 POST http://localhost:8080/pessoas
 
@@ -18,7 +18,7 @@ POST http://localhost:8080/pessoas
     "nascimento" : "1985-09-23",
     "stack" : ["Python", "Node"]
 }
-// Expected: 200
+### Expected: 200
 
 POST http://localhost:8080/pessoas
 
@@ -28,7 +28,7 @@ POST http://localhost:8080/pessoas
     "nascimento" : "1985-09-23",
     "stack" : null
 }
-// Expected: 200
+### Expected: 200
 
 POST http://localhost:8080/pessoas
 
@@ -38,7 +38,7 @@ POST http://localhost:8080/pessoas
     "nascimento" : "1985-09-23",
     "stack" : null
 }
-// Expected: 422
+### Expected: 422
 
 
 POST http://localhost:8080/pessoas
@@ -49,29 +49,29 @@ POST http://localhost:8080/pessoas
     "nascimento" : "1985-01-01",
     "stack" : null
 }
-// Expected: 400
+### Expected: 400
 
 GET http://localhost:8080/pessoas/f7379ae8-8f9b-4cd5-8221-51efe19e721b
-// Expected: 404
+### Expected: 404
 
 GET http://localhost:8080/pessoas/848fd60b-46be-40c8-8280-d4a0f334a87c
-// Expected: 200
-// Need to know the UUID in the database or have been inserted
+### Expected: 200
+### Need to know the UUID in the database or have been inserted
 
 GET http://localhost:8080/pessoas?t=python
-// Expected: 200
+### Expected: 200
 
 GET http://localhost:8080/pessoas?t=none
-// Expected: 200
-// Body: []
+### Expected: 200
+### Body: []
 
 GET http://localhost:8080/pessoas?t=
-// Expected: 400
+### Expected: 400
 
 GET http://localhost:8080/contagem-pessoas
-// Expected: 200
+### Expected: 200
 
-# Tests using the docker-compose-qa.yml
+### Tests using the docker-compose-qa.yml
 
 POST http://localhost:9999/pessoas
 
@@ -81,6 +81,8 @@ POST http://localhost:9999/pessoas
     "nascimento" : "1985-09-23",
     "stack" : ["Python"]
 }
+
+###
 
 POST http://localhost:9999/pessoas
 
@@ -91,6 +93,8 @@ POST http://localhost:9999/pessoas
     "stack" : ["Node"]
 }
 
+###
+
 POST http://localhost:9999/pessoas
 
 {
@@ -99,6 +103,8 @@ POST http://localhost:9999/pessoas
     "nascimento" : "1985-09-23",
     "stack" : ["Node", "Python"]
 }
+
+###
 
 POST http://localhost:9999/pessoas
 
@@ -109,17 +115,22 @@ POST http://localhost:9999/pessoas
     "stack" : ["Node", "Python"]
 }
 
+###
+
 GET http://localhost:9999/contagem-pessoas
 Connection: keep-alive
-# This makes new connections faster given the opened TCP connection.
+### This makes new connections faster given the opened TCP connection.
 
-GET http://localhost:9999/contagem-pessoas
-Connection: close 
-# This increases the latency given the TCP connection needs to be reopen.
+GET http://localhost:9999/contagem-pessoas HTTP/1.1
+connection: close
+content-type: application/json
+### This increases the latency given the TCP connection needs to be reopen.
 
 GET http://localhost:9999/pessoas?t=python
+###
 
 GET http://localhost:9999/pessoas?t=node
+###
 
 POST http://localhost:9999/pessoas
 
@@ -129,7 +140,10 @@ POST http://localhost:9999/pessoas
     "nascimento" : "1985-09-23",
     "stack" : ["Python"]
 }
+###
 
 GET http://localhost:9999/pessoas/2636d0b0-da9e-4d9e-aeb6-b1f1ba0cf089
+###
 
 GET http://localhost:9999/pessoas?t=mJTySfIOlaCMwZXZUnzwGZVX+pyLLxA
+###
