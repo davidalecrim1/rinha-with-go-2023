@@ -148,11 +148,14 @@ GET http://localhost:9999/pessoas/2636d0b0-da9e-4d9e-aeb6-b1f1ba0cf089
 GET http://localhost:9999/pessoas?t=mJTySfIOlaCMwZXZUnzwGZVX+pyLLxA
 ###
 
+GET http://localhost:9999/contagem-pessoas HTTP/1.1
+content-type: application/json
+###
+
 GET http://localhost:8081/contagem-pessoas HTTP/1.1
 content-type: application/json
-### This increases the latency given the TCP connection needs to be reopen.
-
+###
 
 GET http://localhost:8082/contagem-pessoas HTTP/1.1
 content-type: application/json
-### This increases the latency given the TCP connection needs to be reopen.
+###
