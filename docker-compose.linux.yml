@@ -23,9 +23,7 @@ services:
     environment:
       - LOG_LEVEL=INFO
       - PORT=8082
-    depends_on:
-      - postgres-db
-    network_mode: "host"
+      - DB_HOST=localhost
   nginx:
     container_name: nginx
     image: nginx:latest
