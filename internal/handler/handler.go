@@ -32,7 +32,7 @@ type CreatePersonRequest struct {
 
 // POST /pessoas
 func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	var request CreatePersonRequest
@@ -78,7 +78,7 @@ func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 
 // GET /pessoas/[:id]
 func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	idString := r.PathValue("id")
@@ -111,7 +111,7 @@ func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	term := r.URL.Query().Get("t")
