@@ -1,5 +1,5 @@
-# Rinha de Backend (2023/Q3)
-I’m using this to learn new things from the latest editions. I haven’t participated, but I’m considering giving it a try in the next ones.
+# Rinha de Backend with Go (Edition 2023/Q3)
+I’m using this to learn new things from the latest editions with **Go**. I haven’t participated, but I’m considering giving it a try in the next ones.
 
 ## Getting Started
 * Install Docker
