@@ -1,4 +1,4 @@
 - create an alternativa branch and test with some frameworks like fiber and gin (just for fun, net/http is more than enough)
 - try out the bulk insert used by leo vargas using redis for cache and a worker to insert it in the database
-- make the other attributes of the database environment variables
 - test explain analize with gist and with gin and without any of those to see the execution time.
+- test cpu profiling to see if there are slow functions
