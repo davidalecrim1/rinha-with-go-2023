@@ -14,7 +14,6 @@ services:
       - DB_PORT=5432
       - DB_SCHEMA=people
       - DB_MAX_CONN=50
-      - DB_MAX_IDLE_CONN=25
     depends_on:
       - postgres-db
     expose:
