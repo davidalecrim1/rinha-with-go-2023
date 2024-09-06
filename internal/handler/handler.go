@@ -2,13 +2,13 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"go-rinha-de-backend-2023/internal/domain"
 	"log/slog"
-	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type PersonHandler struct {
@@ -24,26 +24,25 @@ func NewPersonHandler(logger *slog.Logger, svc *domain.PersonService) *PersonHan
 }
 
 type CreatePersonRequest struct {
-	Nickname string   `json:"apelido"`
-	Name     string   `json:"nome"`
-	Dob      string   `json:"nascimento"`
-	Stack    []string `json:"stack"`
+	Nickname string   `json:"apelido" validate:"required, max=32"`
+	Name     string   `json:"nome" validate:"required, max=100"`
+	Dob      string   `json:"nascimento" validate:"required,datetime=2006-01-02"`
+	Stack    []string `json:"stack" validate:"dive,nonempty, max=32"`
 }
 
 // POST /pessoas
-func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+func (h *PersonHandler) CreatePerson(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.Context(), 10*time.Second)
 	defer cancel()
 
 	var request CreatePersonRequest
 	var err error
 
-	if err = json.NewDecoder(r.Body).Decode(&request); err != nil {
+	if err = c.BodyParser(&request); err != nil {
 		h.logger.Debug("error decoding request body", "error", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		c.Status(fiber.StatusBadRequest)
+		return nil
 	}
-	defer r.Body.Close()
 
 	person, err := domain.NewPerson(
 		request.Nickname,
@@ -54,72 +53,75 @@ func (h *PersonHandler) CreatePerson(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		h.logger.Debug("error creating person", "error", err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		return
+		c.Status(fiber.StatusUnprocessableEntity)
+		return nil
 	}
 
 	err = h.svc.CreatePerson(ctx, person)
 
 	if errors.Is(err, domain.ErrPersonAlreadyExists) {
 		h.logger.Debug("this person already exists", "error", err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		return
+		c.Status(fiber.StatusUnprocessableEntity)
+		return nil
 	}
 
 	if err != nil {
 		h.logger.Debug("error creating person", "error", err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		return
+		c.Status(fiber.StatusUnprocessableEntity)
+		return nil
 	}
 
-	w.Header().Set("Location", "/pessoas/"+person.ID)
-	w.WriteHeader(http.StatusCreated)
+	c.Set("Location", "/pessoas/"+person.ID)
+	c.Status(fiber.StatusCreated)
+	return nil
 }
 
 // GET /pessoas/[:id]
-func (h *PersonHandler) GetPersonById(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+func (h *PersonHandler) GetPersonById(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.Context(), 10*time.Second)
 	defer cancel()
 
-	idString := r.PathValue("id")
+	idString := c.Params("id")
 
 	if idString == "" {
 		h.logger.Debug("id is required")
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		c.Status(fiber.StatusBadRequest)
+		return nil
 	}
 
 	person, err := h.svc.GetPersonById(ctx, idString)
 
 	if errors.Is(err, domain.ErrPersonNotFound) {
 		h.logger.Debug("person not found", "error", err)
-		w.WriteHeader(http.StatusNotFound)
-		return
+		c.Status(fiber.StatusNotFound)
+		return nil
 	}
 
 	if err != nil {
 		h.logger.Info("error getting person", "error", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		c.Status(fiber.StatusInternalServerError)
+		return nil
 	}
 
-	if err = json.NewEncoder(w).Encode(person); err != nil {
+	if err = c.JSON(person); err != nil {
 		h.logger.Info("error encoding response", "error", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		c.Status(fiber.StatusInternalServerError)
+		return nil
 	}
+
+	return nil
 }
 
-func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+func (h *PersonHandler) SearchPersons(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(c.Context(), 10*time.Second)
 	defer cancel()
 
-	term := r.URL.Query().Get("t")
+	term := c.Query("t")
 
 	if term == "" {
 		h.logger.Debug("term is required")
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		c.Status(fiber.StatusBadRequest)
+		return nil
 	}
 
 	h.logger.Debug("searching people", "term", term)
@@ -128,30 +130,32 @@ func (h *PersonHandler) SearchPersons(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		h.logger.Info("error searching people", "error", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		c.Status(fiber.StatusInternalServerError)
+		return nil
 	}
 
 	if len(people) == 0 {
 		h.logger.Debug("no people found")
 	}
 
-	if err = json.NewEncoder(w).Encode(people); err != nil {
+	if err = c.JSON(people); err != nil {
 		h.logger.Info("error encoding response", "error", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		c.Status(fiber.StatusInternalServerError)
+		return nil
 	}
+	return nil
 }
 
 // GET /contagem-pessoas
-func (h *PersonHandler) GetPersonsCount(w http.ResponseWriter, r *http.Request) {
+func (h *PersonHandler) GetPersonsCount(c *fiber.Ctx) error {
 	count, err := h.svc.GetPersonsCount()
 
 	if err != nil {
 		h.logger.Info("error getting people count", "error", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		c.Status(fiber.StatusInternalServerError)
+		return nil
 	}
 
-	w.Write([]byte(strconv.Itoa(count)))
+	c.Write([]byte(strconv.Itoa(count)))
+	return nil
 }
