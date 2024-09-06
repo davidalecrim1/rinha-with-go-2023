@@ -144,3 +144,17 @@ Results:
 - changed from `pg` to `pgx and pgxpool`, this was the bottleneck that was somehow making Postgres have more latency or use more resources to respond.
 
 ### Fixed
+
+## [v0.1.0] - 2024-09-06
+ 
+Results:
+    - **/contagem-pessoas** -> 45718
+    - **Gatling output**: rinhabackendsimulation-20240906193400539
+    - commit:754d56e49f373d2bcf4d59bdbd606990b7836ec0
+  
+### Added
+
+### Changed
+- use `[fiber](https://docs.gofiber.io)` instead of `net/http` library for REST API. This seems to give a slightly faster response time in miliseconds.
+
+### Fixed
