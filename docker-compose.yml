@@ -17,8 +17,8 @@ services:
       - CACHE_HOST=redis-cache
       - CACHE_PORT=6379
       - ENABLE_PROFILING=1
-      - CPU_PROF_OUT="./prof/go_app_1_cpu.pprof"
-      - MEMORY_PROF_OUT="/prof/go_app_1_mem.pprof"
+      - CPU_PROF_OUT=/app/prof/go_app_1_cpu.pprof
+      - MEMORY_PROF_OUT=/app/prof/go_app_1_mem.pprof
     depends_on:
       - postgres-db
       - redis-cache
@@ -27,7 +27,7 @@ services:
     networks:
       - default
     volumes:
-      - ./prof/:/app/prof/
+      - ./prof/:/app/prof
     deploy:
       resources:
         limits:
@@ -48,8 +48,8 @@ services:
       - CACHE_HOST=redis-cache
       - CACHE_PORT=6379
       - ENABLE_PROFILING=1
-      - CPU_PROF_OUT="./prof/go_app_2_cpu.pprof"
-      - MEMORY_PROF_OUT="/prof/go_app_2_mem.pprof"
+      - CPU_PROF_OUT=/app/prof/go_app_2_cpu.pprof
+      - MEMORY_PROF_OUT=/app/prof/go_app_2_mem.pprof
   nginx:
     container_name: nginx
     image: nginx:1.27.1-alpine

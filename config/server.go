@@ -84,15 +84,22 @@ func PerformProfiling(logger *slog.Logger) {
 		return
 	}
 
+	err := os.MkdirAll("prof", 0755)
+	if err != nil {
+		logger.Error("failed to create profiling directory", "error", err)
+	}
+
+	logger.Info("profiling is enabled")
+
 	cf, err := os.Create(os.Getenv("CPU_PROF_OUT"))
 	if err != nil {
-		log.Fatal("failed to start CPU profiling")
+		logger.Error("failed to start CPU profiling", "error", err)
 	}
 	pprof.StartCPUProfile(cf)
 
 	mf, err := os.Create(os.Getenv("MEMORY_PROF_OUT"))
 	if err != nil {
-		log.Fatal("failed to start memory profiling")
+		logger.Error("failed to start memory profiling", "error", err)
 	}
 	pprof.WriteHeapProfile(mf)
 
