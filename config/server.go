@@ -34,7 +34,10 @@ func InitializeServer() {
 	service := domain.NewPersonService(logger, repo)
 	handler := handler.NewPersonHandler(logger, service)
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		Prefork: true,
+	})
+
 	InitializeRouter(app, handler, logger)
 
 	go func() {
