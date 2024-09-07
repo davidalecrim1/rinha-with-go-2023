@@ -1,1 +1,3 @@
 - create tests for the worker and new integration tests
+- try out sonic
+- do some cpu and memory profiling
