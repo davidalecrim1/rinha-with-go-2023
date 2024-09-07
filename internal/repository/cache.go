@@ -2,11 +2,11 @@ package repository
 
 import (
 	"context"
-	"encoding/json"
 	"go-rinha-de-backend-2023/internal/domain"
 	"log/slog"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/redis/rueidis"
 )
 
@@ -25,7 +25,7 @@ func NewPersonCacheRepository(logger *slog.Logger, client rueidis.Client) *Perso
 }
 
 func (c *PersonCacheRepository) CreatePerson(ctx context.Context, person *domain.Person) error {
-	jsonData, _ := json.Marshal(person)
+	jsonData, _ := sonic.Marshal(person)
 	command := c.client.B().Set().Key("person:" + person.ID).Value(string(jsonData)).ExSeconds(StandardExpiration).Build()
 	err := c.client.Do(ctx, command).Error()
 
@@ -62,7 +62,7 @@ func (c *PersonCacheRepository) GetPersonById(ctx context.Context, id string) (*
 	}
 
 	var person domain.Person
-	err = json.Unmarshal(result, &person)
+	err = sonic.Unmarshal(result, &person)
 
 	if err != nil {
 		return nil, err

@@ -13,7 +13,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 func InitializeServer() {
@@ -34,7 +36,10 @@ func InitializeServer() {
 	service := domain.NewPersonService(logger, repo)
 	handler := handler.NewPersonHandler(logger, service)
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		JSONEncoder: sonic.Marshal,
+		JSONDecoder: sonic.Unmarshal,
+	})
 
 	InitializeRouter(app, handler, logger)
 
@@ -46,6 +51,7 @@ func InitializeServer() {
 		}
 	}()
 
+	WarmUpUuid()
 	GracefulShutdown(logger, cancel, app)
 }
 
@@ -64,4 +70,8 @@ func GracefulShutdown(logger *slog.Logger, cancel context.CancelFunc, app *fiber
 	}
 
 	logger.Info("server gracefully stopped!")
+}
+
+func WarmUpUuid() {
+	uuid.EnableRandPool()
 }
