@@ -16,7 +16,7 @@ services:
       - DB_MAX_CONN=50
       - CACHE_HOST=redis-cache
       - CACHE_PORT=6379
-      - ENABLE_PROFILING=1
+      - ENABLE_PROFILING=0
       - CPU_PROF_OUT=/app/prof/go_app_1_cpu.pprof
       - MEMORY_PROF_OUT=/app/prof/go_app_1_mem.pprof
     depends_on:
@@ -47,7 +47,7 @@ services:
       - DB_MAX_CONN=50
       - CACHE_HOST=redis-cache
       - CACHE_PORT=6379
-      - ENABLE_PROFILING=1
+      - ENABLE_PROFILING=0
       - CPU_PROF_OUT=/app/prof/go_app_2_cpu.pprof
       - MEMORY_PROF_OUT=/app/prof/go_app_2_mem.pprof
   nginx:
