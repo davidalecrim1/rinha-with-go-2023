@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     network_mode: host
     environment:
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=DEBUG
       - PORT=8081
       - DB_HOST=localhost
       - DB_USER=admin
@@ -29,7 +29,7 @@ services:
     <<: *go-app1-config
     container_name: go-app-2
     environment:
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=DEBUG
       - PORT=8082
       - DB_HOST=localhost
       - DB_USER=admin
