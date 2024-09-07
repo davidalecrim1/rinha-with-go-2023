@@ -178,3 +178,16 @@ It's hard to measure real results given the network mode bridge, but this seems 
 - ajust docker compose memory and cpu distribution.
 
 ### Fixed
+
+## [v0.2.1] - 2024-09-07
+
+Hard to measure the effects of the changes using network bridge mode. Just improving and thinking of how to measure.
+
+### Added
+- adding `sonic` for JSON encoding and decoding
+- adding cpu and memory profiling to understand bottlenecks
+
+### Changed
+- some general changes to perform better
+
+### Fixed
