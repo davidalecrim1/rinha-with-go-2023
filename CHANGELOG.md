@@ -158,3 +158,23 @@ Results:
 - use `[fiber](https://docs.gofiber.io)` instead of `net/http` library for REST API. This seems to give a slightly faster response time in miliseconds.
 
 ### Fixed
+
+## [v0.2.0] - 2024-09-06
+ 
+Results:
+    - **/contagem-pessoas** -> 45919
+    - **Gatling output**: rinhabackendsimulation-20240907150913707
+    - commit: 84fda5fd4f7de161b31fd97aef8fad0053ef1c13
+
+It's hard to measure real results given the network mode bridge, but this seems a superior solution for high load on production.
+  
+### Added
+- adding `rueidis` for Redis driver for caching the nickname and create person.
+- worker to insert in bulk in a async way, ensure consistency using the cache.
+- logger to all layers
+- new e2e tests
+
+### Changed
+- ajust docker compose memory and cpu distribution.
+
+### Fixed
