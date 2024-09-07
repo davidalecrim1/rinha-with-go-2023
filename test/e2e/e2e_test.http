@@ -166,7 +166,7 @@ Content-Type: application/json
 }
 ###
 
-GET http://localhost:9999/pessoas/985a1ed5-16c3-4398-89fc-99aeb8082338
+GET http://localhost:9999/pessoas/34aafceb-325d-48a6-b16b-9de90d3578a8
 Content-Type: application/json
 
 ###
@@ -178,6 +178,9 @@ Content-Type: application/json
 GET http://localhost:9999/contagem-pessoas HTTP/1.1
 content-type: application/json
 ###
+
+
+## For testing on Docker Compose in Linux
 
 GET http://localhost:8081/contagem-pessoas HTTP/1.1
 content-type: application/json

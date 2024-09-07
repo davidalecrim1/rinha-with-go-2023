@@ -14,8 +14,11 @@ services:
       - DB_PORT=5432
       - DB_SCHEMA=people
       - DB_MAX_CONN=50
+      - CACHE_HOST=redis-cache
+      - CACHE_PORT=6379
     depends_on:
       - postgres-db
+      - redis-cache
     expose:
       - 80
     networks:
@@ -23,8 +26,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.125'
-          memory: '0.5GB'
+          cpus: '0.175'
+          memory: '0.6GB'
   go-app-2:
     <<: *go-app1-config
     container_name: go-app-2
@@ -64,8 +67,18 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.125'
-          memory: '1.5GB'
+          cpus: '0.8'
+          memory: '1GB'
+  redis-cache:
+    image: redis:7.4-alpine
+    container_name: redis-cache
+    ports:
+    - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.225'
+          memory: '0.3GB'
   pgadmin-ui: # This is to help monitor postgres on tests. Not part of rinha.
     image: dpage/pgadmin4
     container_name: pgadmin-ui

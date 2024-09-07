@@ -3,18 +3,20 @@ package domain
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 var (
-	ErrInvalidName         = errors.New("invalid name")
-	ErrInvalidNickname     = errors.New("invalid nickname")
-	ErrInvalidDate         = errors.New("invalid date")
-	ErrInvalidStack        = errors.New("invalid stack")
-	ErrPersonAlreadyExists = errors.New("person already exists")
-	ErrPersonNotFound      = errors.New("person not found")
+	ErrInvalidName           = errors.New("invalid name")
+	ErrInvalidNickname       = errors.New("invalid nickname")
+	ErrInvalidDate           = errors.New("invalid date")
+	ErrInvalidStack          = errors.New("invalid stack")
+	ErrPersonAlreadyExists   = errors.New("person already exists")
+	ErrNicknameAlreadyExists = errors.New("nickname already exists")
+	ErrPersonNotFound        = errors.New("person not found")
 )
 
 type Person struct {
@@ -94,22 +96,34 @@ func (p *Person) validateStack() error {
 	return nil
 }
 
-type PersonRepository interface {
+type Repository interface {
 	CreatePerson(ctx context.Context, person *Person) error
 	GetPersonById(ctx context.Context, id string) (*Person, error)
 	SearchPersons(ctx context.Context, term string) ([]Person, error)
 	GetPersonsCount() (int, error)
+	CheckNicknameExists(ctx context.Context, nickname string) (bool, error)
 }
 
 type PersonService struct {
-	repo PersonRepository
+	logger *slog.Logger
+	repo   Repository
 }
 
-func NewPersonService(repo PersonRepository) *PersonService {
-	return &PersonService{repo: repo}
+func NewPersonService(logger *slog.Logger, repo Repository) *PersonService {
+	return &PersonService{logger: logger, repo: repo}
 }
 
 func (svc *PersonService) CreatePerson(ctx context.Context, p *Person) error {
+	exists, err := svc.repo.CheckNicknameExists(ctx, p.Nickname)
+
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return ErrPersonAlreadyExists
+	}
+
 	return svc.repo.CreatePerson(ctx, p)
 }
 
