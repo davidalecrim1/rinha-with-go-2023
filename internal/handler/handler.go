@@ -32,7 +32,7 @@ type CreatePersonRequest struct {
 
 // POST /pessoas
 func (h *PersonHandler) CreatePerson(c *fiber.Ctx) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(c.Context(), 30*time.Second)
 	defer cancel()
 
 	var request CreatePersonRequest
@@ -78,7 +78,7 @@ func (h *PersonHandler) CreatePerson(c *fiber.Ctx) error {
 
 // GET /pessoas/[:id]
 func (h *PersonHandler) GetPersonById(c *fiber.Ctx) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(c.Context(), 30*time.Second)
 	defer cancel()
 
 	idString := c.Params("id")
@@ -113,7 +113,7 @@ func (h *PersonHandler) GetPersonById(c *fiber.Ctx) error {
 }
 
 func (h *PersonHandler) SearchPersons(c *fiber.Ctx) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(c.Context(), 30*time.Second)
 	defer cancel()
 
 	term := c.Query("t")
