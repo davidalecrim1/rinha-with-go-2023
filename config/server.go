@@ -10,6 +10,7 @@ import (
 	"log/slog"
 	"os"
 	"os/signal"
+	"runtime/pprof"
 	"syscall"
 	"time"
 
@@ -53,6 +54,11 @@ func InitializeServer() {
 
 	WarmUpUuid()
 	GracefulShutdown(logger, cancel, app)
+	PerformProfiling(logger)
+}
+
+func WarmUpUuid() {
+	uuid.EnableRandPool()
 }
 
 func GracefulShutdown(logger *slog.Logger, cancel context.CancelFunc, app *fiber.App) {
@@ -72,6 +78,30 @@ func GracefulShutdown(logger *slog.Logger, cancel context.CancelFunc, app *fiber
 	logger.Info("server gracefully stopped!")
 }
 
-func WarmUpUuid() {
-	uuid.EnableRandPool()
+func PerformProfiling(logger *slog.Logger) {
+	if os.Getenv("ENABLE_PROFILING") != "1" {
+		logger.Info("profiling is disabled")
+		return
+	}
+
+	cf, err := os.Create(os.Getenv("CPU_PROF_OUT"))
+	if err != nil {
+		log.Fatal("failed to start CPU profiling")
+	}
+	pprof.StartCPUProfile(cf)
+
+	mf, err := os.Create(os.Getenv("MEMORY_PROF_OUT"))
+	if err != nil {
+		log.Fatal("failed to start memory profiling")
+	}
+	pprof.WriteHeapProfile(mf)
+
+	stop := time.After(time.Minute * 3)
+	go func() {
+		<-stop
+		pprof.StopCPUProfile()
+		cf.Close()
+		mf.Close()
+		logger.Info("CPU profiling stopped")
+	}()
 }
