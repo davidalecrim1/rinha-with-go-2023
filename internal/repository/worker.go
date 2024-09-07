@@ -11,8 +11,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var initialBufferSize = 2000
-var tickerDelay = 5 * time.Second
+var initialBufferSize = 1000
+var tickerDelay = 3 * time.Second
 
 type PersonAsyncRepository struct {
 	ctx                 context.Context

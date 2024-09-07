@@ -40,14 +40,19 @@ func (r *PersonRepository) CreatePerson(ctx context.Context, person *domain.Pers
 		return err
 	}
 
-	err = r.cache.CreateNickname(ctx, person.Nickname)
+	go func() {
+		err = r.cache.CreateNickname(ctx, person.Nickname)
 
-	if err != nil {
-		return err
-	}
+		if err != nil {
+			r.logger.Error("error creating nickname", "error", err)
+		}
+	}()
 
-	r.logger.Debug("person sent for creation", "person", person)
-	r.createPersonAsync(person)
+	go func() {
+		r.logger.Debug("person sent for creation", "person", person)
+		r.createPersonAsync(person)
+	}()
+
 	return nil
 }
 
