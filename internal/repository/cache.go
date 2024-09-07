@@ -25,8 +25,8 @@ func NewPersonCacheRepository(logger *slog.Logger, client rueidis.Client) *Perso
 }
 
 func (c *PersonCacheRepository) CreatePerson(ctx context.Context, person *domain.Person) error {
-	jsonData, _ := sonic.Marshal(person)
-	command := c.client.B().Set().Key("person:" + person.ID).Value(string(jsonData)).ExSeconds(StandardExpiration).Build()
+	p, _ := sonic.MarshalString(person)
+	command := c.client.B().Set().Key("person:" + person.ID).Value(p).ExSeconds(StandardExpiration).Build()
 	err := c.client.Do(ctx, command).Error()
 
 	if err != nil {
@@ -41,6 +41,7 @@ func (c *PersonCacheRepository) CreateNickname(ctx context.Context, nickname str
 	err := c.client.Do(ctx, command).Error()
 
 	if err != nil {
+		c.logger.Error("error setting nickname in cache", "nickname", nickname, "error", err)
 		return err
 	}
 
@@ -85,5 +86,6 @@ func (c *PersonCacheRepository) CheckNicknameExists(ctx context.Context, nicknam
 		return false, err
 	}
 
+	c.logger.Debug("nickname found in cache", "nickname", nickname)
 	return result, nil
 }
