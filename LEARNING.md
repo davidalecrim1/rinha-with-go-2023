@@ -30,6 +30,15 @@ I've removed them to perform some tests. Seems I can reach about 21000 requests.
 ### Database Drivers
 They can impact on performance and how a connection is handled well or poorly. I was using the standard `pg` that resulted in 39k inserted people, but when I switched to `pgx and pgxpool`, this was increased to 46k.
 
+### Libraries
+
+#### Sonic
+[sonic](https://github.com/bytedance/sonic) is a fast enconding and decoding library in Go. Seems tha the benchmark show that it outperform the standard library. Also, fiber supports choosing another enconder.
+
+#### UUID
+
+The UUID has an option to enable a pool of random numbers to improve the performance of UUID generation by reducing contention for random sources.
+
 ### Go References
 
 I've been just practicing without lookling at another Go code to not be tempted to copy or test the concept I've haven't seen the need for. I've listed all the rinha versions in Go to explore later in the future:
