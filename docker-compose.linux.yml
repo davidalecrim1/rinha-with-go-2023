@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    network_mode: host
     environment:
       - LOG_LEVEL=INFO
       - PORT=8081
@@ -28,7 +29,16 @@ services:
     <<: *go-app1-config
     container_name: go-app-2
     environment:
+      - LOG_LEVEL=INFO
       - PORT=8082
+      - DB_HOST=localhost
+      - DB_USER=admin
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+      - DB_SCHEMA=people
+      - DB_MAX_CONN=50
+      - CACHE_HOST=localhost
+      - CACHE_PORT=6379
   nginx:
     container_name: nginx
     image: nginx:1.27.1-alpine
@@ -65,8 +75,6 @@ services:
   redis-cache:
     image: redis:7.4-alpine
     container_name: redis-cache
-    ports:
-    - "6379:6379"
     deploy:
       resources:
         limits:
