@@ -26,8 +26,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.175'
-          memory: '0.6GB'
+          cpus: '0.125'
+          memory: '0.5GB'
   go-app-2:
     <<: *go-app1-config
     container_name: go-app-2
@@ -67,8 +67,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.8'
-          memory: '1GB'
+          cpus: '1'
+          memory: '1.2GB'
   redis-cache:
     image: redis:7.4-alpine
     container_name: redis-cache
@@ -77,7 +77,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.225'
+          cpus: '0.125'
           memory: '0.3GB'
   pgadmin-ui: # This is to help monitor postgres on tests. Not part of rinha.
     image: dpage/pgadmin4
