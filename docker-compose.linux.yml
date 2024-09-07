@@ -9,9 +9,16 @@ services:
       - LOG_LEVEL=INFO
       - PORT=8081
       - DB_HOST=localhost
+      - DB_USER=admin
+      - DB_PASSWORD=password
+      - DB_PORT=5432
+      - DB_SCHEMA=people
+      - DB_MAX_CONN=50
+      - CACHE_HOST=localhost
+      - CACHE_PORT=6379
     depends_on:
       - postgres-db
-    network_mode: "host"
+      - redis-cache
     deploy:
       resources:
         limits:
@@ -21,9 +28,7 @@ services:
     <<: *go-app1-config
     container_name: go-app-2
     environment:
-      - LOG_LEVEL=INFO
       - PORT=8082
-      - DB_HOST=localhost
   nginx:
     container_name: nginx
     image: nginx:1.27.1-alpine
@@ -32,7 +37,7 @@ services:
     depends_on:
       - go-app-1
       - go-app-2
-    network_mode: "host"
+    network_mode: host
     deploy:
       resources:
         limits:
@@ -46,14 +51,25 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: people
       POSTGRES_PORT: 5432
-    network_mode: "host"
     volumes:
     - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     - ./postgresql.conf:/docker-entrypoint-initdb.d/postgresql.conf
     command:
       ["postgres","-c","config_file=/docker-entrypoint-initdb.d/postgresql.conf"]
+    network_mode: host
     deploy:
       resources:
         limits:
-          cpus: '1.125'
-          memory: '1.5GB'
+          cpus: '1'
+          memory: '1.2GB'
+  redis-cache:
+    image: redis:7.4-alpine
+    container_name: redis-cache
+    ports:
+    - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.125'
+          memory: '0.3GB'
+    network_mode: host
