@@ -53,8 +53,8 @@ func InitializeServer() {
 	}()
 
 	WarmUpUuid()
-	GracefulShutdown(logger, cancel, app)
 	PerformProfiling(logger)
+	GracefulShutdown(logger, cancel, app)
 }
 
 func WarmUpUuid() {
@@ -96,7 +96,7 @@ func PerformProfiling(logger *slog.Logger) {
 	}
 	pprof.WriteHeapProfile(mf)
 
-	stop := time.After(time.Minute * 3)
+	stop := time.After(time.Minute * 4)
 	go func() {
 		<-stop
 		pprof.StopCPUProfile()
