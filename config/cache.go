@@ -12,7 +12,12 @@ func InitializeCache() rueidis.Client {
 	cache_host := env.GetEnvOrSetDefault("CACHE_HOST", "redis-cache")
 	cache_port := env.GetEnvOrSetDefault("CACHE_PORT", "6379")
 	cache_url := fmt.Sprintf("%s:%s", cache_host, cache_port)
-	cache, err := rueidis.NewClient(rueidis.ClientOption{InitAddress: []string{cache_url}})
+
+	cache, err := rueidis.NewClient(
+		rueidis.ClientOption{
+			InitAddress:      []string{cache_url},
+			AlwaysPipelining: true,
+		})
 
 	if err != nil {
 		log.Fatalf("error loading cache configuration: %v", err)
