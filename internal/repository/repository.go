@@ -41,7 +41,7 @@ func (r *PersonRepository) CreatePerson(ctx context.Context, person *domain.Pers
 	}
 
 	go func() {
-		err = r.cache.CreateNickname(ctx, person.Nickname)
+		err = r.cache.CreateNickname(context.Background(), person.Nickname)
 
 		if err != nil {
 			r.logger.Error("error creating nickname", "error", err)
