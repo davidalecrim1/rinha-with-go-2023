@@ -38,6 +38,7 @@ func InitializeServer() {
 	handler := handler.NewPersonHandler(logger, service)
 
 	app := fiber.New(fiber.Config{
+		AppName:     "rinha-go-app by @davidalecrim1",
 		JSONEncoder: sonic.Marshal,
 		JSONDecoder: sonic.Unmarshal,
 	})
