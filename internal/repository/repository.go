@@ -122,7 +122,7 @@ func (r *PersonRepository) getPersonByIdFromDatabase(ctx context.Context, id str
 	return &person, nil
 }
 
-func (r *PersonRepository) SearchPersons(ctx context.Context, term string) ([]domain.Person, error) {
+func (r *PersonRepository) SearchPeople(ctx context.Context, term string) ([]domain.Person, error) {
 	query := `
 	SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack 
 	FROM people

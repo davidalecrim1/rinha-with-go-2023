@@ -10,6 +10,6 @@ import (
 func InitializeRouter(app *fiber.App, h *handler.PersonHandler, logger *slog.Logger) {
 	app.Post("/pessoas", h.CreatePerson)
 	app.Get("/pessoas/:id", h.GetPersonById)
-	app.Get("/pessoas", h.SearchPersons)
+	app.Get("/pessoas", h.SearchPeople)
 	app.Get("/contagem-pessoas", h.GetPersonsCount)
 }

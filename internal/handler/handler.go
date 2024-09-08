@@ -112,7 +112,7 @@ func (h *PersonHandler) GetPersonById(c *fiber.Ctx) error {
 	return nil
 }
 
-func (h *PersonHandler) SearchPersons(c *fiber.Ctx) error {
+func (h *PersonHandler) SearchPeople(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(c.Context(), 30*time.Second)
 	defer cancel()
 
@@ -126,7 +126,7 @@ func (h *PersonHandler) SearchPersons(c *fiber.Ctx) error {
 
 	h.logger.Debug("searching people", "term", term)
 
-	people, err := h.svc.SearchPersons(ctx, term)
+	people, err := h.svc.SearchPeople(ctx, term)
 
 	if err != nil {
 		h.logger.Info("error searching people", "error", err)
