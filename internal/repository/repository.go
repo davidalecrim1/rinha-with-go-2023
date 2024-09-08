@@ -15,6 +15,8 @@ type CacheRepository interface {
 	GetPersonById(ctx context.Context, id string) (*domain.Person, error)
 	CreateNickname(ctx context.Context, nickname string) error
 	CheckNicknameExists(ctx context.Context, nickname string) (bool, error)
+	GetSearchPeople(ctx context.Context, term string) (*[]domain.Person, error)
+	SetSearchPeople(ctx context.Context, term string, people *[]domain.Person) error
 }
 
 type PersonRepository struct {
@@ -122,7 +124,35 @@ func (r *PersonRepository) getPersonByIdFromDatabase(ctx context.Context, id str
 	return &person, nil
 }
 
-func (r *PersonRepository) SearchPeople(ctx context.Context, term string) ([]domain.Person, error) {
+func (r *PersonRepository) SearchPeople(ctx context.Context, term string) (*[]domain.Person, error) {
+	cachedPeople, err := r.cache.GetSearchPeople(ctx, term)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if cachedPeople != nil {
+		r.logger.Debug("returning cached people", "term", term)
+		return cachedPeople, nil
+	}
+
+	people, err := r.searchPeopleInDatabase(ctx, term)
+	if err != nil {
+		r.logger.Error("error searching people in database", "error", err)
+		return nil, err
+	}
+
+	// this will cause eventual consistency in search given the time of cache (i'm ok with that)
+	if len(*people) > 0 {
+		go func() {
+			_ = r.cache.SetSearchPeople(context.Background(), term, people)
+		}()
+	}
+
+	return people, nil
+}
+
+func (r *PersonRepository) searchPeopleInDatabase(ctx context.Context, term string) (*[]domain.Person, error) {
 	query := `
 	SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack 
 	FROM people
@@ -146,7 +176,7 @@ func (r *PersonRepository) SearchPeople(ctx context.Context, term string) ([]dom
 		people = append(people, person)
 	}
 
-	return people, nil
+	return &people, nil
 }
 
 func (r *PersonRepository) GetPersonsCount() (int, error) {

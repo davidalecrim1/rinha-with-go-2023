@@ -99,7 +99,7 @@ func (p *Person) validateStack() error {
 type Repository interface {
 	CreatePerson(ctx context.Context, person *Person) error
 	GetPersonById(ctx context.Context, id string) (*Person, error)
-	SearchPeople(ctx context.Context, term string) ([]Person, error)
+	SearchPeople(ctx context.Context, term string) (*[]Person, error)
 	GetPersonsCount() (int, error)
 	CheckNicknameExists(ctx context.Context, nickname string) (bool, error)
 }
@@ -131,7 +131,7 @@ func (svc *PersonService) GetPersonById(ctx context.Context, id string) (*Person
 	return svc.repo.GetPersonById(ctx, id)
 }
 
-func (svc *PersonService) SearchPeople(ctx context.Context, term string) ([]Person, error) {
+func (svc *PersonService) SearchPeople(ctx context.Context, term string) (*[]Person, error) {
 	return svc.repo.SearchPeople(ctx, term)
 }
 

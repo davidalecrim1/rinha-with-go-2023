@@ -134,7 +134,7 @@ func (h *PersonHandler) SearchPeople(c *fiber.Ctx) error {
 		return nil
 	}
 
-	if len(people) == 0 {
+	if len(*people) == 0 {
 		h.logger.Debug("no people found")
 	}
 

@@ -45,6 +45,7 @@ func (w *PersonAsyncRepository) Start() {
 		select {
 		case <-ticker.C:
 			if len(w.buffer) > 0 {
+				w.logger.Info("inserting in batch on the database", "len", len(w.buffer))
 				w.bulkCreatePeople()
 			}
 

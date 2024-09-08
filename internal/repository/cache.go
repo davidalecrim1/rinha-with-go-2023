@@ -89,3 +89,36 @@ func (c *PersonCacheRepository) CheckNicknameExists(ctx context.Context, nicknam
 	c.logger.Debug("nickname found in cache", "nickname", nickname)
 	return result, nil
 }
+
+func (c *PersonCacheRepository) SetSearchPeople(ctx context.Context, term string, people *[]domain.Person) error {
+	peopleStr, _ := sonic.MarshalString(people)
+	cmd := c.client.B().Set().Key("search:" + term).Value(peopleStr).ExSeconds(20).Build()
+	err := c.client.Do(ctx, cmd).Error()
+
+	if err != nil {
+		c.logger.Debug("error setting search people in cache", "term", term, "error", err)
+		return err
+	}
+
+	return nil
+}
+
+func (c *PersonCacheRepository) GetSearchPeople(ctx context.Context, term string) (*[]domain.Person, error) {
+	cmd := c.client.B().Get().Key("search:" + term).Build()
+	results, err := c.client.Do(ctx, cmd).AsBytes()
+
+	if rueidis.IsRedisNil(err) {
+		c.logger.Debug("search people not found in cache", "term", term, "error", err)
+		return nil, nil
+	}
+
+	if err != nil {
+		c.logger.Error("error getting search people from cache", "term", term, "error", err)
+		return nil, err
+	}
+
+	var people []domain.Person
+	sonic.Unmarshal(results, &people)
+
+	return &people, nil
+}
