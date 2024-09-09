@@ -77,7 +77,7 @@ func (r *PersonRepository) CheckNicknameExists(ctx context.Context, nickname str
 }
 
 func (r *PersonRepository) checkNicknameExistsInDatabase(ctx context.Context, nickname string) (bool, error) {
-	query := "SELECT COUNT(id) FROM people WHERE nickname = $1"
+	query := "SELECT COUNT(nickname) FROM people WHERE nickname = $1"
 	var id int
 	err := r.db.QueryRow(ctx, query, nickname).Scan(&id)
 
@@ -156,7 +156,8 @@ func (r *PersonRepository) searchPeopleInDatabase(ctx context.Context, term stri
 	query := `
 	SELECT id, nickname, name, dob, string_to_array(stack, ' | ') as stack 
 	FROM people
-	WHERE searchable LIKE $1`
+	WHERE searchable LIKE $1
+	LIMIT 50`
 
 	rows, err := r.db.Query(ctx, query, "%"+term+"%")
 
@@ -166,7 +167,7 @@ func (r *PersonRepository) searchPeopleInDatabase(ctx context.Context, term stri
 
 	defer rows.Close()
 
-	var people []domain.Person = make([]domain.Person, 0)
+	var people []domain.Person = make([]domain.Person, 50)
 	for rows.Next() {
 		var person domain.Person
 		err := rows.Scan(&person.ID, &person.Nickname, &person.Name, &person.Dob, &person.Stack)
@@ -179,7 +180,7 @@ func (r *PersonRepository) searchPeopleInDatabase(ctx context.Context, term stri
 	return &people, nil
 }
 
-func (r *PersonRepository) GetPersonsCount() (int, error) {
+func (r *PersonRepository) GetPeopleCount() (int, error) {
 	query := "SELECT COUNT(id) FROM people"
 	var count int
 	err := r.db.QueryRow(context.Background(), query).Scan(&count)
