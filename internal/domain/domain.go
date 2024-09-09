@@ -100,7 +100,7 @@ type Repository interface {
 	CreatePerson(ctx context.Context, person *Person) error
 	GetPersonById(ctx context.Context, id string) (*Person, error)
 	SearchPeople(ctx context.Context, term string) (*[]Person, error)
-	GetPersonsCount() (int, error)
+	GetPeopleCount() (int, error)
 	CheckNicknameExists(ctx context.Context, nickname string) (bool, error)
 }
 
@@ -135,6 +135,6 @@ func (svc *PersonService) SearchPeople(ctx context.Context, term string) (*[]Per
 	return svc.repo.SearchPeople(ctx, term)
 }
 
-func (svc *PersonService) GetPersonsCount() (int, error) {
-	return svc.repo.GetPersonsCount()
+func (svc *PersonService) GetPeopleCount() (int, error) {
+	return svc.repo.GetPeopleCount()
 }

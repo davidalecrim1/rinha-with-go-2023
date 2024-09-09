@@ -147,8 +147,8 @@ func (h *PersonHandler) SearchPeople(c *fiber.Ctx) error {
 }
 
 // GET /contagem-pessoas
-func (h *PersonHandler) GetPersonsCount(c *fiber.Ctx) error {
-	count, err := h.svc.GetPersonsCount()
+func (h *PersonHandler) GetPeopleCount(c *fiber.Ctx) error {
+	count, err := h.svc.GetPeopleCount()
 
 	if err != nil {
 		h.logger.Info("error getting people count", "error", err)

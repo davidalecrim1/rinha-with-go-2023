@@ -11,5 +11,5 @@ func InitializeRouter(app *fiber.App, h *handler.PersonHandler, logger *slog.Log
 	app.Post("/pessoas", h.CreatePerson)
 	app.Get("/pessoas/:id", h.GetPersonById)
 	app.Get("/pessoas", h.SearchPeople)
-	app.Get("/contagem-pessoas", h.GetPersonsCount)
+	app.Get("/contagem-pessoas", h.GetPeopleCount)
 }
