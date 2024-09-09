@@ -188,21 +188,10 @@ Hard to measure the effects of the changes using network bridge mode. Just impro
 ### Added
 - adding `sonic` for JSON encoding and decoding
 - adding cpu and memory profiling to understand bottlenecks
-
-### Changed
-- some general changes to perform better
-
-### Fixed
-
-
-## [v0.2.2] - 2024-09-07
-
-Still hard to measure, but I might have over engineered the solution, and the performance seems a little slower then before. I will find out why.
-
-### Added
 - search people on cache (will cause eventual consistency)
 
 ### Changed
 - some general changes to perform better
 
 ### Fixed
+- the limit from search query was removed in the past by mistake
