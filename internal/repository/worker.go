@@ -12,7 +12,7 @@ import (
 )
 
 var initialBufferSize = 1000
-var tickerDelay = 3 * time.Second
+var tickerDelay = 5 * time.Second
 
 type PersonAsyncRepository struct {
 	ctx                 context.Context
