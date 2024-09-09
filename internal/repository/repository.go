@@ -77,7 +77,7 @@ func (r *PersonRepository) CheckNicknameExists(ctx context.Context, nickname str
 }
 
 func (r *PersonRepository) checkNicknameExistsInDatabase(ctx context.Context, nickname string) (bool, error) {
-	query := "SELECT COUNT(nickname) FROM people WHERE nickname = $1"
+	query := "SELECT COUNT(id) FROM people WHERE nickname = $1"
 	var id int
 	err := r.db.QueryRow(ctx, query, nickname).Scan(&id)
 
