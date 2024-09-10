@@ -1,3 +1,10 @@
+# General
+
+lint:
+	echo "this requires `golangci-lint`, be sure to have it installed."
+	golangci-lint --version
+	golangci-lint run ./...
+
 # For testing locally
 dev-build-and-run:
 	docker compose -f ./docker-compose.dev.yml up -d --build
