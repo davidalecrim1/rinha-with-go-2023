@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime/pprof"
+	"runtime/trace"
 	"syscall"
 	"time"
 
@@ -104,12 +105,21 @@ func PerformProfiling(logger *slog.Logger) {
 	}
 	pprof.WriteHeapProfile(mf)
 
+	tc, err := os.Create(os.Getenv("TRACE_PROF_OUT"))
+	if err != nil {
+		logger.Error("failed to start memory profiling", "error", err)
+	}
+	trace.Start(tc)
+
 	stop := time.After(time.Minute * 4)
+
 	go func() {
 		<-stop
 		pprof.StopCPUProfile()
+		trace.Stop()
 		cf.Close()
 		mf.Close()
+		tc.Close()
 		logger.Info("CPU profiling stopped")
 	}()
 }

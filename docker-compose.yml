@@ -19,6 +19,7 @@ services:
       - ENABLE_PROFILING=0
       - CPU_PROF_OUT=/app/prof/go_app_1_cpu.pprof
       - MEMORY_PROF_OUT=/app/prof/go_app_1_mem.pprof
+      - TRACE_PROF_OUT=/app/prof/go_app_1_trace.pprof
     depends_on:
       - postgres-db
       - redis-cache
@@ -50,6 +51,7 @@ services:
       - ENABLE_PROFILING=0
       - CPU_PROF_OUT=/app/prof/go_app_2_cpu.pprof
       - MEMORY_PROF_OUT=/app/prof/go_app_2_mem.pprof
+      - TRACE_PROF_OUT=/app/prof/go_app_2_trace.pprof
   nginx:
     container_name: nginx
     image: nginx:1.27.1-alpine
