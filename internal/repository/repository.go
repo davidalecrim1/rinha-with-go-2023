@@ -63,14 +63,14 @@ func (r *PersonRepository) createPersonAsync(person *domain.Person) {
 }
 
 func (r *PersonRepository) CheckNicknameExists(ctx context.Context, nickname string) (bool, error) {
-	nicknameCached, err := r.cache.CheckNicknameExists(ctx, nickname)
+	nicknameIsCached, err := r.cache.CheckNicknameExists(ctx, nickname)
 
 	if err != nil {
 		return false, err
 	}
 
-	if nicknameCached {
-		return nicknameCached, nil
+	if nicknameIsCached {
+		return nicknameIsCached, nil
 	}
 
 	return r.checkNicknameExistsInDatabase(ctx, nickname)

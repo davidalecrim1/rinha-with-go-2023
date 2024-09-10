@@ -9,7 +9,7 @@ import (
 )
 
 func InitializeCache() rueidis.Client {
-	cache_host := env.GetEnvOrSetDefault("CACHE_HOST", "redis-cache")
+	cache_host := env.GetEnvOrSetDefault("CACHE_HOST", "localhost")
 	cache_port := env.GetEnvOrSetDefault("CACHE_PORT", "6379")
 	cache_url := fmt.Sprintf("%s:%s", cache_host, cache_port)
 
