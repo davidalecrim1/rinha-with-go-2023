@@ -9,7 +9,7 @@ COPY /config ./config
 COPY /database ./database
 COPY /internal ./internal
 
-RUN CGO_ENABLED=0 go build -o server -ldflags="-w -s" ./cmd/main.go 
+RUN CGO_ENABLED=0 go build -o server ./cmd/main.go 
 
 FROM alpine:3.20
 WORKDIR /app
