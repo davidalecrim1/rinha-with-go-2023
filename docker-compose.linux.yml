@@ -5,9 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    network_mode: host
     environment:
-      - LOG_LEVEL=DEBUG
+      - LOG_LEVEL=INFO
       - PORT=8081
       - DB_HOST=localhost
       - DB_USER=admin
@@ -17,19 +16,26 @@ services:
       - DB_MAX_CONN=50
       - CACHE_HOST=localhost
       - CACHE_PORT=6379
+      - ENABLE_PROFILING=0
+      - CPU_PROF_OUT=/app/prof/go_app_1_cpu.pprof
+      - MEMORY_PROF_OUT=/app/prof/go_app_1_mem.pprof
+      - TRACE_PROF_OUT=/app/prof/go_app_1_trace.pprof
     depends_on:
       - postgres-db
       - redis-cache
+    network_mode: host
+    volumes:
+      - ./prof/:/app/prof
     deploy:
       resources:
         limits:
-          cpus: '0.125'
+          cpus: '0.2'
           memory: '0.5GB'
   go-app-2:
     <<: *go-app1-config
     container_name: go-app-2
     environment:
-      - LOG_LEVEL=DEBUG
+      - LOG_LEVEL=INFO
       - PORT=8082
       - DB_HOST=localhost
       - DB_USER=admin
@@ -39,6 +45,10 @@ services:
       - DB_MAX_CONN=50
       - CACHE_HOST=localhost
       - CACHE_PORT=6379
+      - ENABLE_PROFILING=0
+      - CPU_PROF_OUT=/app/prof/go_app_2_cpu.pprof
+      - MEMORY_PROF_OUT=/app/prof/go_app_2_mem.pprof
+      - TRACE_PROF_OUT=/app/prof/go_app_2_trace.pprof
   nginx:
     container_name: nginx
     image: nginx:1.27.1-alpine
@@ -61,23 +71,24 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: people
       POSTGRES_PORT: 5432
+    network_mode: host
     volumes:
     - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     - ./postgresql.conf:/docker-entrypoint-initdb.d/postgresql.conf
     command:
       ["postgres","-c","config_file=/docker-entrypoint-initdb.d/postgresql.conf"]
-    network_mode: host
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: '0.850'
           memory: '1.2GB'
   redis-cache:
     image: redis:7.4-alpine
     container_name: redis-cache
+    network_mode: host
     deploy:
       resources:
         limits:
           cpus: '0.125'
           memory: '0.3GB'
-    network_mode: host
+ 
