@@ -167,7 +167,9 @@ func (r *PersonRepository) searchPeopleInDatabase(ctx context.Context, term stri
 
 	defer rows.Close()
 
-	var people []domain.Person = make([]domain.Person, 50)
+	people := make([]domain.Person, 0, 50)
+	allocatedPeople := 0
+
 	for rows.Next() {
 		var person domain.Person
 		err := rows.Scan(&person.ID, &person.Nickname, &person.Name, &person.Dob, &person.Stack)
@@ -175,8 +177,10 @@ func (r *PersonRepository) searchPeopleInDatabase(ctx context.Context, term stri
 			return nil, err
 		}
 		people = append(people, person)
+		allocatedPeople++
 	}
 
+	people = people[:allocatedPeople]
 	return &people, nil
 }
 
