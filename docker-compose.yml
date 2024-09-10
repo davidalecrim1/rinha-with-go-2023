@@ -100,9 +100,6 @@ services:
         limits:
           cpus: '0.125'
           memory: '0.3GB'
-    volumes:
-      - ./redis.conf:/etc/redis/redis.conf
-    command: ["redis-server", "/etc/redis/redis.conf"]
   pgadmin-ui: # This is to help monitor postgres on tests. Not part of rinha.
     image: dpage/pgadmin4
     container_name: pgadmin-ui
