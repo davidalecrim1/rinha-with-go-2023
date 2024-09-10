@@ -185,13 +185,41 @@ It's hard to measure real results given the network mode bridge, but this seems 
 
 Hard to measure the effects of the changes using network bridge mode. Just improving and thinking of how to measure.
 
+Results:
+    - **/contagem-pessoas** -> 46565
+    - **Gatling output**: rinhabackendsimulation-20240910134601355
+    - commit: 9ee115a36a23426b643c58eb33d97c532259df16
+
+Gatling Output (MacOS M1 with Power On)
+```bash
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                     114967 (OK=114967 KO=0     )
+> min response time                                      0 (OK=0      KO=-     )
+> max response time                                   2178 (OK=2178   KO=-     )
+> mean response time                                    12 (OK=12     KO=-     )
+> std deviation                                         79 (OK=79     KO=-     )
+> response time 50th percentile                          1 (OK=1      KO=-     )
+> response time 75th percentile                          2 (OK=2      KO=-     )
+> response time 95th percentile                         26 (OK=26     KO=-     )
+> response time 99th percentile                        349 (OK=349    KO=-     )
+> mean requests/sec                                555.396 (OK=555.396 KO=-     )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                        114692 (100%)
+> 800 ms <= t < 1200 ms                                138 (  0%)
+> t >= 1200 ms                                         137 (  0%)
+> failed                                                 0 (  0%)
+================================================================================
+```
+
 ### Added
 - adding `sonic` for JSON encoding and decoding
-- adding cpu and memory profiling to understand bottlenecks
+- adding cpu, memory and tracing profiling to understand bottlenecks
 - search people on cache (will cause eventual consistency)
 
 ### Changed
 - some general changes to perform better
+- some many others changes that I couldn't keep track of given the change and test to see performance improvements.
 
 ### Fixed
 - the limit from search query was removed in the past by mistake
