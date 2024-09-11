@@ -1,0 +1,49 @@
+services:
+  go-app-1:
+    container_name: go-app-1
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres-db
+    networks:
+      - default
+    environment:
+      - PORT=8080
+      - LOG_LEVEL=DEBUG
+      - DB_HOST=postgres-db
+  postgres-db:
+    image: postgres:16.4-alpine3.20
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: people
+    ports:
+    - 5432:5432
+    volumes:
+    - pgdata:/var/lib/postgresql/data
+    - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - default
+  pgadmin-ui:
+    image: dpage/pgadmin4
+    container_name: pgadmin-ui-dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "david.socer@hotmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "5J4JgqSffm8f7rE"
+    ports:
+      - "16543:80"
+    volumes:
+      - ~/.pgadmin4-data:/var/lib/pgadmin
+    depends_on:
+      - postgres-db
+    networks:
+      - default
+volumes:
+  pgdata:
+networks:
+  default:
+    driver: bridge

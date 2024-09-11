@@ -23,3 +23,10 @@ go.work.sum
 
 # env file
 .env
+
+# make folder file
+.DS_Store
+
+.diff
+
+/gatling-charts-highcharts-bundle-3.9.5/
