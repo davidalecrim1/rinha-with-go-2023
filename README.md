@@ -25,9 +25,10 @@ Build a REST API that can handle:
 
 ## 🏗️ System Design
 
-
+![](./docs/system-design-rinha-2023.png)
 
 ## Getting Started
+
 * Install Docker
 * Run `docker compose up -d --build` or `make build-and-run`
 
@@ -39,3 +40,7 @@ Build a REST API that can handle:
 
 # References
 - https://github.com/zanfranceschi/rinha-de-backend-2023-q3
+
+# License
+
+[LICENSE](./LICENSE)
