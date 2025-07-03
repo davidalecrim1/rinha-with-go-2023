@@ -13,7 +13,7 @@ Build a REST API that can handle:
 
 ## 🚀 Technical Stack
 
-- **API**: Native `net/http` for high-performance HTTP handling
+- **API**: Framework `Fiber` for high-performance HTTP handling
 - **Database**: PostgreSQL with `pgx` and `pgxpool` for efficient connection management
 - **Load Balancer**: Nginx for request distribution across API instances
 - **Architecture**: Clean architecture with separation of concerns
@@ -21,8 +21,11 @@ Build a REST API that can handle:
   - Repository pattern
   - Dependency injection
   - Middleware support
+- **Caching**: Redis and the `ruedis` for Redis Driver
 
-## 🏗️ Project Structure
+## 🏗️ System Design
+
+
 
 ## Getting Started
 * Install Docker
