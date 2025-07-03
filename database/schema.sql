@@ -11,6 +11,10 @@ CREATE TABLE IF NOT EXISTS people (
     ) STORED
 );
 
+CREATE INDEX
+    CONCURRENTLY IF NOT EXISTS idx_people_nickname ON public.people
+    (nickname);
+
 -- I will test using GiST and GIN
 CREATE INDEX
     CONCURRENTLY IF NOT EXISTS idx_people_searchable ON public.people USING gist

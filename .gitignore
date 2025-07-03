@@ -29,6 +29,6 @@ go.work.sum
 
 .diff
 
-/gatling-charts-highcharts-bundle-3.9.5/
+prof/*
 
-prof/**
+/gatling-charts-highcharts-bundle-3.9.5/

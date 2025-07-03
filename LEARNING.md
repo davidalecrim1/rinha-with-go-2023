@@ -30,6 +30,31 @@ I've removed them to perform some tests. Seems I can reach about 21000 requests.
 ### Database Drivers
 They can impact on performance and how a connection is handled well or poorly. I was using the standard `pg` that resulted in 39k inserted people, but when I switched to `pgx and pgxpool`, this was increased to 46k.
 
+### Libraries
+
+#### Sonic
+[sonic](https://github.com/bytedance/sonic) is a fast enconding and decoding library in Go. Seems tha the benchmark show that it outperform the standard library. Also, fiber supports choosing another enconder.
+
+#### UUID
+
+The UUID has an option to enable a pool of random numbers to improve the performance of UUID generation by reducing contention for random sources.
+
+### Profiling
+Profiling is the process of measuring the performance of an application to identify bottlenecks and optimize resource usage (CPU, memory, etc.). In Go, profiling helps analyze where the program spends most of its time, memory usage, and other system resource utilization during execution.
+
+Types of Profiling in Go:
+- CPU Profiling: Tracks how much time the CPU spends on various functions.
+- Memory (Heap) Profiling: Monitors memory allocations to help identify memory leaks and high memory usage.
+- Goroutine Profiling: Helps analyze goroutine usage and contention.
+- Block Profiling: Tracks the time goroutines spend blocked on synchronization primitives like channels or mutexes.
+
+Analyzing the output:
+```bash
+go tool pprof cpu.prof
+```
+
+Then use the web view with the command `web` for a nice view of performance and memory allocation.
+
 ### Go References
 
 I've been just practicing without lookling at another Go code to not be tempted to copy or test the concept I've haven't seen the need for. I've listed all the rinha versions in Go to explore later in the future:

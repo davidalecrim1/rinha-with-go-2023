@@ -144,3 +144,82 @@ Results:
 - changed from `pg` to `pgx and pgxpool`, this was the bottleneck that was somehow making Postgres have more latency or use more resources to respond.
 
 ### Fixed
+
+## [v0.1.0] - 2024-09-06
+ 
+Results:
+    - **/contagem-pessoas** -> 45718
+    - **Gatling output**: rinhabackendsimulation-20240906193400539
+    - commit:754d56e49f373d2bcf4d59bdbd606990b7836ec0
+  
+### Added
+
+### Changed
+- use `[fiber](https://docs.gofiber.io)` instead of `net/http` library for REST API. This seems to give a slightly faster response time in miliseconds.
+
+### Fixed
+
+
+## [v0.2.0] - 2024-09-06
+ 
+Results:
+    - **/contagem-pessoas** -> 45919
+    - **Gatling output**: rinhabackendsimulation-20240907150913707
+    - commit: 84fda5fd4f7de161b31fd97aef8fad0053ef1c13
+
+It's hard to measure real results given the network mode bridge, but this seems a superior solution for high load on production.
+  
+### Added
+- adding `rueidis` for Redis driver for caching the nickname and create person.
+- worker to insert in bulk in a async way, ensure consistency using the cache.
+- logger to all layers
+- new e2e tests
+
+### Changed
+- ajust docker compose memory and cpu distribution.
+
+### Fixed
+
+
+## [v0.2.1] - 2024-09-07
+
+Hard to measure the effects of the changes using network bridge mode. Just improving and thinking of how to measure.
+
+Results:
+    - **/contagem-pessoas** -> 46565
+    - **Gatling output**: rinhabackendsimulation-20240910134601355
+    - commit: 9ee115a36a23426b643c58eb33d97c532259df16
+
+Gatling Output (MacOS M1 with Power On)
+```bash
+================================================================================
+---- Global Information --------------------------------------------------------
+> request count                                     114967 (OK=114967 KO=0     )
+> min response time                                      0 (OK=0      KO=-     )
+> max response time                                   2178 (OK=2178   KO=-     )
+> mean response time                                    12 (OK=12     KO=-     )
+> std deviation                                         79 (OK=79     KO=-     )
+> response time 50th percentile                          1 (OK=1      KO=-     )
+> response time 75th percentile                          2 (OK=2      KO=-     )
+> response time 95th percentile                         26 (OK=26     KO=-     )
+> response time 99th percentile                        349 (OK=349    KO=-     )
+> mean requests/sec                                555.396 (OK=555.396 KO=-     )
+---- Response Time Distribution ------------------------------------------------
+> t < 800 ms                                        114692 (100%)
+> 800 ms <= t < 1200 ms                                138 (  0%)
+> t >= 1200 ms                                         137 (  0%)
+> failed                                                 0 (  0%)
+================================================================================
+```
+
+### Added
+- adding `sonic` for JSON encoding and decoding
+- adding cpu, memory and tracing profiling to understand bottlenecks
+- search people on cache (will cause eventual consistency)
+
+### Changed
+- some general changes to perform better
+- some many others changes that I couldn't keep track of given the change and test to see performance improvements.
+
+### Fixed
+- the limit from search query was removed in the past by mistake

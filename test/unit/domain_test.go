@@ -181,3 +181,63 @@ func BenchmarkPerson_NewPerson(b *testing.B) {
 		)
 	}
 }
+
+func BenchmarkPeople_WithAppend(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		var people []domain.Person
+		for j := 0; j < 50; j++ {
+			people = append(people, domain.Person{ID: "34aafceb-325d-48a6-b16b-9de90d3578a8"})
+		}
+	}
+}
+
+// This option is 76x times faster the allocating on demand as above
+// Trade off for more memory usage and faster execution
+func BenchmarkPeople_WithPreallocatedSliceWith50Valid(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		people := make([]domain.Person, 50)
+		validCount := 0
+		for j := 0; j < 50; j++ {
+			people[validCount] = domain.Person{ID: "34aafceb-325d-48a6-b16b-9de90d3578a8"}
+			validCount++
+		}
+		people = people[:validCount]
+	}
+}
+
+// This is only 2x or 3x times faster then allocating on demand as the above one
+// Trade off for more memory usage and faster execution
+func BenchmarkPeople_WithPreallocatedSliceAndOnly15Created(b *testing.B) {
+	var people []domain.Person
+	for i := 0; i < b.N; i++ {
+		people = make([]domain.Person, 50)
+		validCount := 0
+		for j := 0; j < 15; j++ {
+			people[validCount] = domain.Person{ID: "34aafceb-325d-48a6-b16b-9de90d3578a8"}
+			validCount++
+		}
+		people = people[:validCount]
+	}
+}
+
+// This is 1x time faster then allocating the slice on demand
+// Trade off for more memory usage and faster execution
+func BenchmarkPeople_WithPreallocatedSliceAndOnly15CreatedAndValidated(b *testing.B) {
+	var people []domain.Person
+	for i := 0; i < b.N; i++ {
+		people = make([]domain.Person, 50)
+		for j := 0; j < 15; j++ {
+			people[j] = domain.Person{ID: "34aafceb-325d-48a6-b16b-9de90d3578a8"}
+			j++
+		}
+
+		validCount := 0
+		for _, person := range people {
+			if person.ID == "" {
+				people[validCount] = person
+				validCount++
+			}
+		}
+		people = people[:validCount] // Trim the slice to remove invalid entries
+	}
+}

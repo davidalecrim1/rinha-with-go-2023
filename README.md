@@ -32,12 +32,6 @@ Build a REST API that can handle:
 * Install Docker
 * Run `docker compose up -d --build` or `make build-and-run`
 
-## Stack
-- `net/http` for REST API.
-- Nginx as Reserve Proxy for Load Balacing
-- Postgres as Database
-- `pgx and pgxpool` for Postgres Driver
-
 # References
 - https://github.com/zanfranceschi/rinha-de-backend-2023-q3
 
